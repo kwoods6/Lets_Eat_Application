@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Lets Eat Version 1</string>
+    <string name="title_activity_account_creation_screen">accountCreationScreen</string>
+    <string-array name="restaurantTypes">
+        <item>Chinese</item>
+        <item>Italian</item>
+        <item>Mexican</item>
+    </string-array>
+    <string-array
+        name="Mexican">
+        <item>La Hacienda Mexican Restaurant\n2901 E Zion Rd Ste 19 Fayetteville, AR 72703\n(479) 444-0821</item>
+        <item>El Burrito Loco\n2155 W 6th St Fayetteville, AR 72701\n(479) 527-9577</item>
+        <item>Mangos Gourmet Taco Shop\n2050 West Martin Luther King Blvd Fayetteville, AR 72701\n(479) 301-2793</item>
+    </string-array>
+    <string-array name="Italian">
+        <item>Geraldi\’s\n20 S University Ave Fayetteville, AR 72701\n(479) 575-0556</item>
+        <item>Vetro 1925\n17 E Center St Fayetteville, AR 72701\n(479) 966-4649</item>
+        <item>Greenhouse Grille\n17 E Center St Fayetteville, AR 72701\n(479) 966-4649</item>
+    </string-array>
+    <string-array name="Chinese">
+        <item>Hunan Manor Chinese Restaurant\n1147 N Tahoe Pl Fayetteville, AR 72704\n(479) 521-3883</item>
+        <item> Madame Wu’s Fine Asian Cuisine\n1818 N Crossover Rd Fayetteville, AR 72701\n(479) 251-1818</item>
+        <item>China Cafe\n2630 E Citizens Dr Fayetteville, AR 72703\n479) 442-3998</item>
+    </string-array>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_user_account_screen">UserAccountScreen</string>
+    <string name="title_activity_resturant_screen">ResturantScreen</string>
+</resources>
