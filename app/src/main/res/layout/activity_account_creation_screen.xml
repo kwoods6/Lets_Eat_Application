@@ -14,17 +14,21 @@
         android:id="@+id/newUsername"
         android:hint="Enter Your Username"
         android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/newFirstname"
-        android:layout_alignEnd="@+id/newFirstname" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/newPassword"
         android:hint="Enter Your Password"
-        android:layout_below="@+id/newLastname"
-        android:layout_alignRight="@+id/accountCreationButton"
-        android:layout_alignEnd="@+id/accountCreationButton" />
+        android:layout_below="@+id/newUsername"
+        android:layout_alignLeft="@+id/newUsername"
+        android:layout_alignStart="@+id/newUsername"
+        android:layout_alignRight="@+id/newUsername"
+        android:layout_alignEnd="@+id/newUsername" />
 
     <Button
         android:layout_width="wrap_content"
@@ -41,9 +45,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/newFirstname"
         android:hint="Enter Your First Name"
-        android:layout_below="@+id/newUsername"
+        android:layout_below="@+id/newPassword"
         android:layout_alignLeft="@+id/newPassword"
-        android:layout_alignStart="@+id/newPassword" />
+        android:layout_alignStart="@+id/newPassword"
+        android:layout_alignRight="@+id/newPassword"
+        android:layout_alignEnd="@+id/newPassword" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -51,14 +57,20 @@
         android:id="@+id/newLastname"
         android:hint="Enter Your Last Name"
         android:layout_below="@+id/newFirstname"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignLeft="@+id/newFirstname"
+        android:layout_alignStart="@+id/newFirstname"
+        android:layout_alignRight="@+id/newFirstname"
+        android:layout_alignEnd="@+id/newFirstname" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/newCity"
         android:hint="Enter Your City"
-        android:layout_below="@+id/newPassword"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/newLastname"
+        android:layout_alignLeft="@+id/newLastname"
+        android:layout_alignStart="@+id/newLastname"
+        android:layout_alignRight="@+id/newLastname"
+        android:layout_alignEnd="@+id/newLastname" />
 
 </RelativeLayout>

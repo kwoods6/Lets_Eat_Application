@@ -111,7 +111,7 @@ public class UserAccountScreen extends ActionBarActivity {
     Context context = this;
 
 
-    //same http reuest class as the login screen
+    //same http request class as the login screen
     class HttpRequest extends AsyncTask<String,String,String>
     {
 
