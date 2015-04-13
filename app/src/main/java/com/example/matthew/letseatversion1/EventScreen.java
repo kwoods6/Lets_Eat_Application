@@ -1,15 +1,20 @@
 package com.example.matthew.letseatversion1;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+
+import com.google.android.gms.tagmanager.InstallReferrerReceiver;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -28,13 +33,11 @@ public class EventScreen extends ActionBarActivity {
 
     Context context = this;
     String Username = "";
-    String Friend1 = "";
-    String Friend2 = "";
-    String Friend3 = "";
-    String Friend4 = "";
-    String Friend5 = "";
+    String Friendnumber = "";
+    String Friends = "";
     String DateAndTime = "";
     String Location = "";
+    int NumberOfFriends;
 
 
     @Override
@@ -83,21 +86,50 @@ public class EventScreen extends ActionBarActivity {
     public void startCreatingAccountButtonClick(View view) {
 
 
-        EditText friend1 = (EditText)findViewById(R.id.inviteUser1);
-        EditText friend2 = (EditText)findViewById(R.id.inviteUser2);
-        EditText friend3 = (EditText)findViewById(R.id.inviteUser3);
-        EditText friend4 = (EditText)findViewById(R.id.inviteUser4);
-        EditText friend5 = (EditText)findViewById(R.id.inviteUser5);
+        EditText numberOfFriends = (EditText)findViewById(R.id.numberOfUsers);
         EditText dateAndTime = (EditText)findViewById(R.id.dateAndTime);
         EditText location = (EditText)findViewById(R.id.location);
 
-        Friend1 = friend1.getText().toString();
-        Friend2 = friend2.getText().toString();
-        Friend3 = friend3.getText().toString();
-        Friend4 = friend4.getText().toString();
-        Friend5 = friend5.getText().toString();
+        Friendnumber = numberOfFriends.getText().toString();
         DateAndTime = dateAndTime.getText().toString();
         Location = location.getText().toString();
+
+        NumberOfFriends = Integer.parseInt(Friendnumber);
+
+        for(int i = 0; i < NumberOfFriends; i++)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("please enter the " + (i + 1) + " th/rd/nd/st user name");
+
+            // Set up the input
+            final EditText input = new EditText(this);
+            // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+            builder.setView(input);
+
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Friends += input.getText().toString();
+                    Friends += ";";
+                }
+            });
+
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.show();
+        }
+
+
+
+
+
+        //String numberOfUsersText = JOptionpane.ShowInputDialog("please enter the amount of other users");
+
 
         new HttpRequest().execute("http://www.csce.uark.edu/~mrs018/CreateEvent.php");
 
@@ -105,15 +137,12 @@ public class EventScreen extends ActionBarActivity {
 
 
 
+
     class HttpRequest extends AsyncTask<String,String,String>
     {
         //holder strings that are used to pass info from LoginScreen class to HttpRequest class
         String username;
-        String friend1;
-        String friend2;
-        String friend3;
-        String friend4;
-        String friend5;
+        String friends;
         String dateandtime;
         String location;
 
@@ -130,11 +159,7 @@ public class EventScreen extends ActionBarActivity {
             // TODO Auto-generated method stub
 
              username = Username;
-             friend1 = Friend1;
-             friend2 = Friend2;
-             friend3 = Friend3;
-             friend4 = Friend4;
-             friend5 = Friend5;
+             friends = Friends;
              dateandtime = DateAndTime;
              location = Location;
 
@@ -151,11 +176,7 @@ public class EventScreen extends ActionBarActivity {
                 //makes name value pairs to be passed to server
                 ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                 nameValuePairs.add(new BasicNameValuePair("username", username));
-                nameValuePairs.add(new BasicNameValuePair("friend1", friend1));
-                nameValuePairs.add(new BasicNameValuePair("friend2", friend2));
-                nameValuePairs.add(new BasicNameValuePair("friend3", friend3));
-                nameValuePairs.add(new BasicNameValuePair("friend4", friend4));
-                nameValuePairs.add(new BasicNameValuePair("friend5", friend5));
+                nameValuePairs.add(new BasicNameValuePair("friends", friends));
                 nameValuePairs.add(new BasicNameValuePair("dateandtime", dateandtime));
                 nameValuePairs.add(new BasicNameValuePair("location", location));
 

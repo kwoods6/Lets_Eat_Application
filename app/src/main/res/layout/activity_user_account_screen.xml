@@ -83,7 +83,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/quickType"
-        android:hint="quick search type of food"
+        android:hint="enter a type of food to quick search"
         android:layout_below="@+id/finalCity"
         android:layout_centerHorizontal="true" />
 
@@ -91,7 +91,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/quickLocation"
-        android:hint="quick search location"
+        android:hint="enter a city to quick search"
         android:layout_below="@+id/quickType"
         android:layout_centerHorizontal="true" />
 

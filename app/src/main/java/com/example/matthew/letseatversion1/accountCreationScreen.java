@@ -89,6 +89,7 @@ public class accountCreationScreen extends ActionBarActivity {
         //makes a new http class and executes the url
         new HttpRequest().execute("http://www.csce.uark.edu/~mrs018/Create.php");
 
+
     }
 
 
@@ -112,6 +113,10 @@ public class accountCreationScreen extends ActionBarActivity {
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub
             super.onPostExecute(result);
+
+            /*new AlertDialog.Builder(context).setTitle("response from server")
+                    .setMessage(result)
+                    .setIcon(android.R.drawable.ic_dialog_alert).show();*/
 
             Intent intent = new Intent(context, LoginScreen.class);
             startActivity(intent);
