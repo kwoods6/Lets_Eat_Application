@@ -1,0 +1,96 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.matthew.letseatversion1.EventScreen">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="invite"
+        android:id="@+id/inviteButton"
+        android:onClick="startCreatingAccountButtonClick"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="76dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/inviteUser1"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:hint="Enter the first user"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/inviteUser2"
+        android:layout_below="@+id/inviteUser1"
+        android:layout_alignRight="@+id/inviteUser1"
+        android:layout_alignEnd="@+id/inviteUser1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:hint="Enter the second user"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/inviteUser3"
+        android:hint="Enter the third user"
+        android:layout_below="@+id/inviteUser2"
+        android:layout_alignRight="@+id/inviteUser2"
+        android:layout_alignEnd="@+id/inviteUser2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/inviteUser4"
+        android:hint="Enter the fourth user"
+        android:layout_below="@+id/inviteUser3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/inviteUser3"
+        android:layout_alignEnd="@+id/inviteUser3" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/inviteUser5"
+        android:hint="Enter the fifth user"
+        android:layout_below="@+id/inviteUser4"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/inviteUser4"
+        android:layout_alignEnd="@+id/inviteUser4" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dateAndTime"
+        android:hint="Enter the date and time of the event"
+        android:layout_below="@+id/inviteUser5"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/inviteUser5"
+        android:layout_alignEnd="@+id/inviteUser5" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/location"
+        android:hint="Enter the location of the event"
+        android:layout_below="@+id/dateAndTime"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/dateAndTime"
+        android:layout_alignEnd="@+id/dateAndTime" />
+
+</RelativeLayout>

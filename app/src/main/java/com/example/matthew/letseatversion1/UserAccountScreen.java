@@ -1,15 +1,18 @@
 package com.example.matthew.letseatversion1;
 
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Spinner;
+import android.widget.EditText;
 import android.widget.TextView;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -20,6 +23,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 
@@ -31,11 +37,15 @@ public class UserAccountScreen extends ActionBarActivity {
     String newCity;
     String newLastname;
     String newFirstname;
+    String whatWeAreDoing;
+    String localString;
+    String termString;
     TextView user;
     TextView firstName;
     TextView lastName;
     TextView city;
     String[] tokens;
+    String[] eventTokens;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,23 +97,40 @@ public class UserAccountScreen extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //when the search button is clicked it pulls the selected info from the spinner and sends that to the next activity
-    public void searchButtonClick(View view) {
-        Intent intent = new Intent(this, ResturantScreen.class);
-        Bundle myBundle = new Bundle();
-        Spinner mySpinner = (Spinner) findViewById(R.id.spinner);
-        myBundle.putString("type", mySpinner.getSelectedItem().toString());
-        intent.putExtras(myBundle);
+
+    //when the search button is clicked it bundles the username and sends that to the next activity
+    public void createEventButtonClick(View view) {
+        Bundle bundle = new Bundle();
+        bundle.putString("passingUserName", tokens[3]);
+        Intent intent = new Intent(getBaseContext(), EventScreen.class);
+        intent.putExtra("passingUserName", tokens[3]);
         startActivity(intent);
+
+    }
+
+    public void checkEventButtonClick(View view){
+        whatWeAreDoing = "checkEvent";
+        new HttpRequest().execute("http://www.csce.uark.edu/~mrs018/CheckEventInvites.php");
+
     }
 
     //button to edit account
     public void editAccountButtonClick (View view) {
-        new HttpRequest().execute("http://www.csce.uark.edu/~mrs018/EditInfo.php");
+
+        EditText term = (EditText)findViewById(R.id.quickType);
+        EditText local = (EditText)findViewById(R.id.quickLocation);
+
+        termString = term.getText().toString();
+        localString = local.getText().toString();
+
+
+        whatWeAreDoing = "editAccount";
+        new HttpRequest().execute("http://uaf59309.ddns.uark.edu/yelprequest.php");
     }
 
     //button to delete the account
     public void deleteAccountButtonClick(View view) {
+        whatWeAreDoing = "deleteAccount";
         new HttpRequest().execute("http://www.csce.uark.edu/~mrs018/Delete.php");
     }
 
@@ -120,14 +147,50 @@ public class UserAccountScreen extends ActionBarActivity {
         String city;
         String firstname;
         String lastname;
+        String WhatWeAreDoing;
+        String Local;
+        String Term;
 
         @Override
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub
             super.onPostExecute(result);
 
+            if( WhatWeAreDoing.equalsIgnoreCase("deleteAccount")) {
                 Intent intent = new Intent(context, LoginScreen.class);
                 startActivity(intent);
+            }
+            else if(WhatWeAreDoing.equalsIgnoreCase("checkEvent")) {
+                new AlertDialog.Builder(context).setTitle("response from server")
+                        .setMessage(result)
+                        .setIcon(android.R.drawable.ic_dialog_alert).show();;
+            }
+            else {
+                try {
+
+                    JSONObject jobject = new JSONObject(result);
+                    String list = "";
+                    JSONArray jarray = jobject.getJSONArray("businesses");
+                    for (int i = 0; i < jarray.length(); i++) {
+                        JSONObject json_data = jarray.getJSONObject(i);
+                        String restaurantName = json_data.getString("name");
+                        String rating = json_data.getString("rating");
+                        String phone = json_data.getString("display_phone");
+                        JSONObject address = (JSONObject) json_data.getJSONObject("location");
+                        JSONArray display_address = address.getJSONArray("display_address");
+                        String finaladdress = display_address.getString(0) + " " + display_address.getString(1);
+                        String realAddress = address.getString("address");
+                        String formattedString = restaurantName + "\n" + rating + "\n" + phone + "\n" + finaladdress + "\n\n";
+                        list += formattedString;
+                    }
+                    new AlertDialog.Builder(context).setTitle("response from server")
+                            .setMessage(list)
+                            .setIcon(android.R.drawable.ic_dialog_alert).show();
+
+                } catch (Exception e) {
+                    Log.e(e.getClass().getName(), e.getMessage(), e);
+                }
+            }
 
         }
 
@@ -139,6 +202,9 @@ public class UserAccountScreen extends ActionBarActivity {
             city = newCity;
             firstname = newFirstname;
             lastname = newLastname;
+            WhatWeAreDoing = whatWeAreDoing;
+            Local = localString;
+            Term = termString;
             super.onPreExecute();
         }
 
@@ -147,11 +213,17 @@ public class UserAccountScreen extends ActionBarActivity {
             try
             {
                 ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                nameValuePairs.add(new BasicNameValuePair("username", username));
-                nameValuePairs.add(new BasicNameValuePair("password", password));
-                nameValuePairs.add(new BasicNameValuePair("hometown", city));
-                nameValuePairs.add(new BasicNameValuePair("firstname", firstname));
-                nameValuePairs.add(new BasicNameValuePair("lastname", lastname));
+                if( WhatWeAreDoing.equalsIgnoreCase("deleteAccount")) {
+                    nameValuePairs.add(new BasicNameValuePair("username", username));
+                    nameValuePairs.add(new BasicNameValuePair("password", password));
+                    nameValuePairs.add(new BasicNameValuePair("hometown", city));
+                    nameValuePairs.add(new BasicNameValuePair("firstname", firstname));
+                    nameValuePairs.add(new BasicNameValuePair("lastname", lastname));
+                }
+                if(WhatWeAreDoing.equalsIgnoreCase("checkEvent") || WhatWeAreDoing.equalsIgnoreCase("editAccount")) {
+                    nameValuePairs.add(new BasicNameValuePair("term", Term));
+                    nameValuePairs.add(new BasicNameValuePair("location", Local));
+                }
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpPost method = new HttpPost(params[0]);
                 method.setEntity(new UrlEncodedFormEntity(nameValuePairs));

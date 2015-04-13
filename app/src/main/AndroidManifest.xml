@@ -36,8 +36,12 @@
             android:label="@string/title_activity_user_account_screen" >
         </activity>
         <activity
-            android:name=".ResturantScreen"
+            android:name=".OldEventScreen"
             android:label="@string/title_activity_resturant_screen" >
+        </activity>
+        <activity
+            android:name=".EventScreen"
+            android:label="@string/title_activity_event_screen" >
         </activity>
     </application>
 
