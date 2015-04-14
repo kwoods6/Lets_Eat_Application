@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -109,14 +111,21 @@ public class UserAccountScreen extends ActionBarActivity {
     }
 
     public void checkEventButtonClick(View view){
-        whatWeAreDoing = "checkEvent";
-        new HttpRequest().execute("http://www.csce.uark.edu/~mrs018/CheckEventInvites.php");
 
+        Bundle bundle = new Bundle();
+        bundle.putString("passingUserName", tokens[3]);
+        Intent intent = new Intent(getBaseContext(), SelectPreferencesScreen.class);
+        intent.putExtra("passingUserName", tokens[3]);
+        new CheckEvents().execute("http://www.csce.uark.edu/~mrs018/CheckEventInvites.php");
+
+        //if(responce == something)
+            //gmake a popup with accept / decline
+            //if accepted
+                 //startActivity(intent);
+        //else display no invites 
     }
 
-    //button to edit account
-    public void editAccountButtonClick (View view) {
-
+    public void quickSearch(View view){
         EditText term = (EditText)findViewById(R.id.quickType);
         EditText local = (EditText)findViewById(R.id.quickLocation);
 
@@ -124,8 +133,20 @@ public class UserAccountScreen extends ActionBarActivity {
         localString = local.getText().toString();
 
 
-        whatWeAreDoing = "editAccount";
+        whatWeAreDoing = "quickSearch";
         new HttpRequest().execute("http://uaf59309.ddns.uark.edu/yelprequest.php");
+
+    }
+
+    //button to edit account
+    public void editAccountButtonClick (View view) {
+
+        Bundle bundle = new Bundle();
+        bundle.putString("passingUserName", tokens[3]);
+        Intent intent = new Intent(getBaseContext(), EditAccountScreen.class);
+        intent.putExtra("passingUserName", tokens[3]);
+
+        startActivity(intent);
     }
 
     //button to delete the account
@@ -159,11 +180,6 @@ public class UserAccountScreen extends ActionBarActivity {
             if( WhatWeAreDoing.equalsIgnoreCase("deleteAccount")) {
                 Intent intent = new Intent(context, LoginScreen.class);
                 startActivity(intent);
-            }
-            else if(WhatWeAreDoing.equalsIgnoreCase("checkEvent")) {
-                new AlertDialog.Builder(context).setTitle("response from server")
-                        .setMessage(result)
-                        .setIcon(android.R.drawable.ic_dialog_alert).show();;
             }
             else {
                 try {
@@ -220,7 +236,7 @@ public class UserAccountScreen extends ActionBarActivity {
                     nameValuePairs.add(new BasicNameValuePair("firstname", firstname));
                     nameValuePairs.add(new BasicNameValuePair("lastname", lastname));
                 }
-                if(WhatWeAreDoing.equalsIgnoreCase("checkEvent") || WhatWeAreDoing.equalsIgnoreCase("editAccount")) {
+                if(WhatWeAreDoing.equalsIgnoreCase("quickSearch")) {
                     nameValuePairs.add(new BasicNameValuePair("term", Term));
                     nameValuePairs.add(new BasicNameValuePair("location", Local));
                 }
@@ -230,6 +246,80 @@ public class UserAccountScreen extends ActionBarActivity {
 
                 HttpResponse response = httpclient.execute(method);
                 HttpEntity entity = response.getEntity();
+                if(entity != null){
+                    return EntityUtils.toString(entity);
+                }
+                else{
+                    return "No string.";
+                }
+            }
+            catch(Exception e){
+                return "Network problem";
+            }
+
+        }
+    }
+
+    class CheckEvents extends AsyncTask<String,String,String>
+    {
+        //holder strings that are used to pass info from LoginScreen class to HttpRequest class
+        String username;
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
+            try
+            {
+                JSONArray arr = new JSONArray(result);
+                String inviters = "";
+                for(int i = 0; i < arr.length(); i++)
+                {
+                    JSONObject invite = arr.getJSONObject(i);
+                    String inviter = invite.getString("inviter");
+                    inviters+= inviter + ";";
+                }
+                Toast toast = Toast.makeText(getApplicationContext(),inviters, Toast.LENGTH_LONG);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+
+            username = newUserID;
+
+
+
+            super.onPreExecute();
+        }
+
+        @Override
+        //this passing info to and from the app and server
+        //it is done on a separate thread so that it does not interfere with other task while the info is transferred
+        protected String doInBackground(String... params) {
+            try
+            {
+                //makes name value pairs to be passed to server
+                ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                nameValuePairs.add(new BasicNameValuePair("username", username));
+
+
+                //makes a httpclient and sends the info to the server
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost method = new HttpPost(params[0]);
+                method.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+                HttpResponse response = httpclient.execute(method);
+                HttpEntity entity = response.getEntity();
+
+                //keep the stream open until all the data has been passed back
                 if(entity != null){
                     return EntityUtils.toString(entity);
                 }

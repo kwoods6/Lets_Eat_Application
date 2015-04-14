@@ -39,4 +39,6 @@
     <string name="title_activity_user_account_screen">UserAccountScreen</string>
     <string name="title_activity_resturant_screen">ResturantScreen</string>
     <string name="title_activity_event_screen">EventScreen</string>
+    <string name="title_activity_edit_account_screen">EditAccountScreen</string>
+    <string name="title_activity_select_preferences_screen">SelectPreferencesScreen</string>
 </resources>

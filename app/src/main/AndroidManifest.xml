@@ -43,6 +43,14 @@
             android:name=".EventScreen"
             android:label="@string/title_activity_event_screen" >
         </activity>
+        <activity
+            android:name=".EditAccountScreen"
+            android:label="@string/title_activity_edit_account_screen" >
+        </activity>
+        <activity
+            android:name=".SelectPreferencesScreen"
+            android:label="@string/title_activity_select_preferences_screen" >
+        </activity>
     </application>
 
 </manifest>

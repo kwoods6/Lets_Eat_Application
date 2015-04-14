@@ -48,15 +48,16 @@
         android:text="Create Event"
         android:id="@+id/button"
         android:onClick="createEventButtonClick"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:layout_below="@+id/quickSearchButton"
+        android:layout_alignLeft="@+id/edit"
+        android:layout_alignStart="@+id/edit" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="quick search"
-        android:id="@+id/editAccountButton"
-        android:onClick="editAccountButtonClick"
+        android:id="@+id/quickSearchButton"
+        android:onClick="quickSearch"
         android:layout_below="@+id/quickLocation"
         android:layout_alignLeft="@+id/button"
         android:layout_alignStart="@+id/button" />
@@ -93,6 +94,15 @@
         android:id="@+id/quickLocation"
         android:hint="enter a city to quick search"
         android:layout_below="@+id/quickType"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Account"
+        android:id="@+id/edit"
+        android:onClick="editAccountButtonClick"
+        android:layout_below="@+id/deleteAccountButton"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
