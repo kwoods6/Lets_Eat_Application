@@ -10,6 +10,8 @@ public class ReferenceClass {
     Event Stages: Creation -> Invites -> Accept or Decline -> SendInPreferences (Looped through all participants)
                   Pending -> SendInRestaurants (Also Looped) -> Completed -> Notified
 
+    This is Jake updating the reference file
+
      */
 
 }
