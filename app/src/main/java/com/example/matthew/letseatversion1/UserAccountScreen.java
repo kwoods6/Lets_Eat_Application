@@ -2,8 +2,8 @@ package com.example.matthew.letseatversion1;
 
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -29,19 +29,25 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 
 public class UserAccountScreen extends ActionBarActivity {
 
     String serverResponse;
+    String checkInviteServerResponse = "[]";
     String newUserID;
     String newUserPassword;
     String newCity;
     String newLastname;
     String newFirstname;
     String whatWeAreDoing;
+    boolean invitation = false;
     String localString;
     String termString;
+    String Inviter;
+    String dateandtime;
+    String location;
     TextView user;
     TextView firstName;
     TextView lastName;
@@ -111,18 +117,51 @@ public class UserAccountScreen extends ActionBarActivity {
     }
 
     public void checkEventButtonClick(View view){
-
         Bundle bundle = new Bundle();
         bundle.putString("passingUserName", tokens[3]);
-        Intent intent = new Intent(getBaseContext(), SelectPreferencesScreen.class);
+        bundle.putString("passingInviter", Inviter);
+        final Intent intent = new Intent(getBaseContext(), SelectPreferencesScreen.class);
         intent.putExtra("passingUserName", tokens[3]);
+        intent.putExtra("passingInviter", Inviter);
         new CheckEvents().execute("http://www.csce.uark.edu/~mrs018/CheckEventInvites.php");
+        //new CheckEvents().execute("http://www.csce.uark.edu/~mrs018/CheckEventInvites.php");
 
-        //if(responce == something)
-            //gmake a popup with accept / decline
-            //if accepted
-                 //startActivity(intent);
-        //else display no invites 
+
+
+
+        if(invitation == true){
+            invitation = false;
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("you have an invite from " + Inviter + " \n at location " + location + "\n on " + dateandtime + "\n please accept or decline");
+
+            // Set up the input
+
+            // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+
+            builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(intent);
+                    //SendInPreferences.php username preferences inviter
+                }
+            });
+
+            builder.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    new declineInvite().execute("http://www.csce.uark.edu/~mrs018/SendInPreferences.php");
+                }
+            });
+            builder.show();
+        }
+        else{
+            new AlertDialog.Builder(context).setTitle("response from server")
+                    .setMessage("no invites currently")
+                    .show();
+        }
+
+
     }
 
     public void quickSearch(View view){
@@ -199,7 +238,7 @@ public class UserAccountScreen extends ActionBarActivity {
                         String formattedString = restaurantName + "\n" + rating + "\n" + phone + "\n" + finaladdress + "\n\n";
                         list += formattedString;
                     }
-                    new AlertDialog.Builder(context).setTitle("response from server")
+                    new AlertDialog.Builder(context).setTitle("quick search results")
                             .setMessage(list)
                             .setIcon(android.R.drawable.ic_dialog_alert).show();
 
@@ -270,11 +309,12 @@ public class UserAccountScreen extends ActionBarActivity {
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub
             super.onPostExecute(result);
-            try
+           /* try
             {
-                JSONArray arr = new JSONArray(result);
+                JSONObject OBJ = new JSONObject(result);
+                JSONArray arr = OBJ.getJSONArray();
                 String inviters = "";
-                for(int i = 0; i < arr.length(); i++)
+                    for(int i = 0; i < arr.length(); i++)
                 {
                     JSONObject invite = arr.getJSONObject(i);
                     String inviter = invite.getString("inviter");
@@ -285,6 +325,18 @@ public class UserAccountScreen extends ActionBarActivity {
             catch (Exception e)
             {
 
+            }*/
+            checkInviteServerResponse = result;
+            if(!checkInviteServerResponse.equalsIgnoreCase("[]")) {
+                eventTokens = checkInviteServerResponse.split("\"");
+                Inviter = eventTokens[3];
+                dateandtime = eventTokens[7];
+                location = eventTokens[11];
+                invitation = true;
+
+                /*new AlertDialog.Builder(context).setTitle("response from server")
+                        .setMessage(result)
+                        .setIcon(android.R.drawable.ic_dialog_alert).show();*/
             }
 
         }
@@ -334,9 +386,70 @@ public class UserAccountScreen extends ActionBarActivity {
         }
     }
 
+    class declineInvite extends AsyncTask<String,String,String>
+    {
+        //holder strings that are used to pass info from LoginScreen class to HttpRequest class
+        String username;
+        String inviter;
+        String preferences;
 
+
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
+
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+
+            username = newUserID;
+            inviter = Inviter;
+            preferences = "000000000";
+
+
+            super.onPreExecute();
+        }
+
+        @Override
+        //this passing info to and from the app and server
+        //it is done on a separate thread so that it does not interfere with other task while the info is transferred
+        protected String doInBackground(String... params) {
+            try
+            {
+                //makes name value pairs to be passed to server
+                ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                nameValuePairs.add(new BasicNameValuePair("username", username));
+                nameValuePairs.add(new BasicNameValuePair("inviter", inviter));
+                nameValuePairs.add(new BasicNameValuePair("preferences", username));
+                //makes a httpclient and sends the info to the server
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost method = new HttpPost(params[0]);
+                method.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+                HttpResponse response = httpclient.execute(method);
+                HttpEntity entity = response.getEntity();
+
+                //keep the stream open until all the data has been passed back
+                if(entity != null){
+                    return EntityUtils.toString(entity);
+                }
+                else{
+                    return "No string.";
+                }
+            }
+            catch(Exception e){
+                return "Network problem";
+            }
+
+        }
+    }
 
 }
+
 
 
 

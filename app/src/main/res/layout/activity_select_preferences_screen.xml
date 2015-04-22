@@ -18,7 +18,7 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="food1"
+        android:text="american"
         android:id="@+id/checkBox"
         android:checked="false"
         android:layout_below="@+id/textView"
@@ -28,60 +28,60 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="food1"
+        android:text="french"
         android:id="@+id/checkBox2"
         android:checked="false"
-        android:layout_below="@+id/checkBox"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/textView"
+        android:layout_toLeftOf="@+id/checkBox4"
+        android:layout_toStartOf="@+id/checkBox4" />
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="food1"
+        android:text="italian"
         android:id="@+id/checkBox3"
         android:checked="false"
-        android:layout_below="@+id/checkBox2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/textView"
+        android:layout_toRightOf="@+id/checkBox2"
+        android:layout_toEndOf="@+id/checkBox2" />
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="food1"
+        android:text="mexican"
         android:id="@+id/checkBox4"
         android:checked="false"
-        android:layout_below="@+id/checkBox3"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/checkBox2"
+        android:layout_toRightOf="@+id/checkBox6"
+        android:layout_toEndOf="@+id/checkBox6" />
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="food1"
+        android:text="chinese  "
         android:id="@+id/checkBox5"
         android:checked="false"
-        android:layout_below="@+id/checkBox4"
+        android:layout_alignTop="@+id/checkBox4"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="food1"
+        android:text="korean"
         android:id="@+id/checkBox6"
         android:checked="false"
-        android:layout_below="@+id/checkBox5"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignTop="@+id/checkBox5"
+        android:layout_toRightOf="@+id/checkBox"
+        android:layout_toEndOf="@+id/checkBox" />
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="food1"
+        android:text="vegan"
         android:id="@+id/checkBox7"
         android:checked="false"
-        android:layout_below="@+id/checkBox6"
+        android:layout_below="@+id/checkBox5"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -90,7 +90,29 @@
         android:layout_height="wrap_content"
         android:text="select"
         android:id="@+id/selectPreferencesButton"
-        android:layout_below="@+id/checkBox7"
+        android:onClick="selectPreferencesButtonClick"
+        android:layout_below="@+id/checkBox8"
         android:layout_centerHorizontal="true"
-        android:onClick="selectPreferencesButtonClick"/>
+        android:layout_marginTop="45dp" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="gluten free"
+        android:id="@+id/checkBox8"
+        android:checked="false"
+        android:layout_below="@+id/checkBox4"
+        android:layout_toRightOf="@+id/checkBox9"
+        android:layout_toEndOf="@+id/checkBox9" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="vegetarian"
+        android:id="@+id/checkBox9"
+        android:checked="false"
+        android:layout_below="@+id/checkBox4"
+        android:layout_alignLeft="@+id/checkBox6"
+        android:layout_alignStart="@+id/checkBox6" />
+
 </RelativeLayout>

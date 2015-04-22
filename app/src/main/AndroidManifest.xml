@@ -51,6 +51,14 @@
             android:name=".SelectPreferencesScreen"
             android:label="@string/title_activity_select_preferences_screen" >
         </activity>
+        <activity
+            android:name=".ResturantScreen"
+            android:label="@string/title_activity_resturant_screen"
+            android:parentActivityName=".LoginScreen" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.matthew.letseatversion1.LoginScreen" />
+        </activity>
     </application>
 
 </manifest>

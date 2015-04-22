@@ -71,17 +71,9 @@ public class EventScreen extends ActionBarActivity {
         //CreateEvent.php
     }
 
-    public void  passingAccountInfo(String result){
-        Bundle bundle = new Bundle();
-        bundle.putString("serverResponse", result);
-        Intent intent = new Intent(getBaseContext(), UserAccountScreen.class);
-        intent.putExtra("serverResponse", result);
-        startActivity(intent);
 
 
-    }
-
-    public void startCreatingAccountButtonClick(View view) {
+    public void startInviteButtonClick(View view) {
 
 
         EditText numberOfFriends = (EditText)findViewById(R.id.numberOfUsers);
@@ -123,15 +115,33 @@ public class EventScreen extends ActionBarActivity {
         }
 
 
+    }
 
+    public void startEventButtonClick(View view){
 
-
-        //String numberOfUsersText = JOptionpane.ShowInputDialog("please enter the amount of other users");
-
+       /* new AlertDialog.Builder(context).setTitle("freinds variable")
+                .setMessage(Friends)
+                .setIcon(android.R.drawable.ic_dialog_alert).show();*/
 
         new HttpRequest().execute("http://www.csce.uark.edu/~mrs018/CreateEvent.php");
 
+        try {
+            wait(5000);
+        }
+        catch(Exception e){
+            //error
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString("passingUserName", Username);
+        bundle.putString("passingInviter", Username);
+        Intent intent = new Intent(getBaseContext(), SelectPreferencesScreen.class);
+        intent.putExtra("passingUserName", Username);
+        intent.putExtra("passingInviter", Username);
+        startActivity(intent);
     }
+
+
 
 
 
@@ -149,6 +159,10 @@ public class EventScreen extends ActionBarActivity {
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub
             super.onPostExecute(result);
+
+            new AlertDialog.Builder(context).setTitle("response from server")
+                    .setMessage(result)
+                    .setIcon(android.R.drawable.ic_dialog_alert).show();
 
         }
 

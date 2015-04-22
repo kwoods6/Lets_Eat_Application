@@ -1,23 +1,36 @@
 package com.example.matthew.letseatversion1;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+
+import java.util.ArrayList;
 
 
 public class SelectPreferencesScreen extends ActionBarActivity {
 
     String PreferenceString;
     String UserID;
+    String Inviter;
+   // Context context = this;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +38,7 @@ public class SelectPreferencesScreen extends ActionBarActivity {
         setContentView(R.layout.activity_select_preferences_screen);
 
         UserID = getIntent().getExtras().getString("passingUserName");
+        Inviter = getIntent().getExtras().getString("passingInviter");
     }
 
 
@@ -52,56 +66,100 @@ public class SelectPreferencesScreen extends ActionBarActivity {
 
     public void selectPreferencesButtonClick(View view){
 
-        if(/*some check here to see if the box is checked*/){
+        CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox);
+        CheckBox checkBox2 = (CheckBox) findViewById(R.id.checkBox2);
+        CheckBox checkBox3 = (CheckBox) findViewById(R.id.checkBox3);
+        CheckBox checkBox4 = (CheckBox) findViewById(R.id.checkBox4);
+        CheckBox checkBox5 = (CheckBox) findViewById(R.id.checkBox5);
+        CheckBox checkBox6 = (CheckBox) findViewById(R.id.checkBox6);
+        CheckBox checkBox7 = (CheckBox) findViewById(R.id.checkBox7);
+        CheckBox checkBox8 = (CheckBox) findViewById(R.id.checkBox8);
+        CheckBox checkBox9 = (CheckBox) findViewById(R.id.checkBox9);
+
+        if(checkBox9.isChecked() ){
 
             PreferenceString = "1";
         }
         else{
             PreferenceString = "0";
         }
-        if(/*some check here to see if the box is checked*/){
+        if(checkBox8.isChecked() ){
+
+            PreferenceString = "1";
+        }
+        else{
+            PreferenceString = "0";
+        }
+        if(checkBox7.isChecked()){
 
             PreferenceString += "1";
         }
         else{
             PreferenceString += "0";
         }
-        if(/*some check here to see if the box is checked*/){
+        if(checkBox6.isChecked()){
 
             PreferenceString += "1";
         }
         else{
             PreferenceString += "0";
         }
-        if(/*some check here to see if the box is checked*/){
+        if(checkBox5.isChecked()){
 
             PreferenceString += "1";
         }
         else{
             PreferenceString += "0";
         }
-        if(/*some check here to see if the box is checked*/){
+        if(checkBox4.isChecked()){
 
             PreferenceString += "1";
         }
         else{
             PreferenceString += "0";
         }
-        if(/*some check here to see if the box is checked*/){
+        if(checkBox3.isChecked()){
 
             PreferenceString += "1";
         }
         else{
             PreferenceString += "0";
         }
-        if(/*some check here to see if the box is checked*/){
+        if(checkBox2.isChecked()){
 
             PreferenceString += "1";
         }
         else{
             PreferenceString += "0";
         }
+        if(checkBox.isChecked()){
+
+            PreferenceString += "1";
+        }
+        else{
+            PreferenceString += "0";
+        }
+
+        new SendPreferences().execute("http://www.csce.uark.edu/~mrs018/SendInPreferences.php");
+
+        new AlertDialog.Builder(this).setTitle("variable")
+                .setMessage(PreferenceString)
+                .show();
+
+
+
+
+
+        Intent intent = new Intent(this, UserAccountScreen.class);
+        startActivity(intent);
+
     }
+/*public void bullshit()
+{
+    Intent intent = new Intent(context, UserAccountScreen.class);
+    startActivity(intent);
+}*/
+
 
     class SendPreferences extends AsyncTask<String,String,String>
     {
@@ -109,12 +167,15 @@ public class SelectPreferencesScreen extends ActionBarActivity {
         String username;
         String inviter;
         String preferences;
+        //Context mattsucks;
+
 
 
         @Override
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub
             super.onPostExecute(result);
+           // bullshit();
 
 
         }
@@ -123,10 +184,10 @@ public class SelectPreferencesScreen extends ActionBarActivity {
         protected void onPreExecute() {
             // TODO Auto-generated method stub
 
-            username = Username;
-            inviter = "blah";
+            username = UserID;
+            inviter = Inviter;
             preferences = PreferenceString;
-
+            //mattsucks = context;
 
             super.onPreExecute();
         }
