@@ -48,6 +48,7 @@ public class UserAccountScreen extends ActionBarActivity {
     String Inviter;
     String dateandtime;
     String location;
+    String infoToPass;
     TextView user;
     TextView firstName;
     TextView lastName;
@@ -61,24 +62,26 @@ public class UserAccountScreen extends ActionBarActivity {
         setContentView(R.layout.activity_user_account_screen);
 
         //pulls the response from the server and textfield ids
-        serverResponse = getIntent().getExtras().getString("serverResponse");
-        user=(TextView) findViewById(R.id.finalUser);
-        firstName=(TextView) findViewById(R.id.finalFirstname);
-        lastName=(TextView) findViewById(R.id.finalLastname);
-        city=(TextView) findViewById(R.id.finalCity);
+        if(getIntent().getExtras() != null) {
+            serverResponse = getIntent().getExtras().getString("serverResponse");
+            user = (TextView) findViewById(R.id.finalUser);
+            firstName = (TextView) findViewById(R.id.finalFirstname);
+            lastName = (TextView) findViewById(R.id.finalLastname);
+            city = (TextView) findViewById(R.id.finalCity);
 
 
-        //tokens the string into usefull info
-        tokens = serverResponse.split("\"");
+            //tokens the string into usefull info
+            tokens = serverResponse.split("\"");
 
-        newUserID = tokens[3];
-        newUserPassword = tokens[7];
+            newUserID = tokens[3];
+            newUserPassword = tokens[7];
 
-        //sets the textboxs equal to the appropriate strings
-        user.setText(tokens[3]);
-        firstName.setText(tokens[11]);
-        lastName.setText(tokens[15]);
-        city.setText(tokens[19]);
+            //sets the textboxs equal to the appropriate strings
+            user.setText(tokens[3]);
+            firstName.setText(tokens[11]);
+            lastName.setText(tokens[15]);
+            city.setText(tokens[19]);
+        }
 
     }
 
@@ -108,25 +111,24 @@ public class UserAccountScreen extends ActionBarActivity {
 
     //when the search button is clicked it bundles the username and sends that to the next activity
     public void createEventButtonClick(View view) {
-        Bundle bundle = new Bundle();
-        bundle.putString("passingUserName", tokens[3]);
         Intent intent = new Intent(getBaseContext(), EventScreen.class);
-        intent.putExtra("passingUserName", tokens[3]);
+        intent.putExtra("serverResponse", serverResponse);
         startActivity(intent);
 
     }
 
     public void checkEventButtonClick(View view){
-        Bundle bundle = new Bundle();
-        bundle.putString("passingUserName", tokens[3]);
-        bundle.putString("passingInviter", Inviter);
-        final Intent intent = new Intent(getBaseContext(), SelectPreferencesScreen.class);
-        intent.putExtra("passingUserName", tokens[3]);
-        intent.putExtra("passingInviter", Inviter);
+
         new CheckEvents().execute("http://www.csce.uark.edu/~mrs018/CheckEventInvites.php");
         //new CheckEvents().execute("http://www.csce.uark.edu/~mrs018/CheckEventInvites.php");
 
 
+    }
+
+    public void eventCheckFinished(){
+        final Intent intent = new Intent(getBaseContext(), SelectPreferencesScreen.class);
+        intent.putExtra("serverResponse", serverResponse);
+        intent.putExtra("passingInviter", Inviter);
 
 
         if(invitation == true){
@@ -160,8 +162,6 @@ public class UserAccountScreen extends ActionBarActivity {
                     .setMessage("no invites currently")
                     .show();
         }
-
-
     }
 
     public void quickSearch(View view){
@@ -181,9 +181,9 @@ public class UserAccountScreen extends ActionBarActivity {
     public void editAccountButtonClick (View view) {
 
         Bundle bundle = new Bundle();
-        bundle.putString("passingUserName", tokens[3]);
+        bundle.putString("passingUserName", newUserID);
         Intent intent = new Intent(getBaseContext(), EditAccountScreen.class);
-        intent.putExtra("passingUserName", tokens[3]);
+        intent.putExtra("passingUserName", newUserID);
 
         startActivity(intent);
     }
@@ -246,6 +246,8 @@ public class UserAccountScreen extends ActionBarActivity {
                     Log.e(e.getClass().getName(), e.getMessage(), e);
                 }
             }
+
+
 
         }
 
@@ -338,6 +340,7 @@ public class UserAccountScreen extends ActionBarActivity {
                         .setMessage(result)
                         .setIcon(android.R.drawable.ic_dialog_alert).show();*/
             }
+            eventCheckFinished();
 
         }
 

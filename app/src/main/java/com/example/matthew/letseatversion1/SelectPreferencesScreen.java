@@ -29,7 +29,7 @@ public class SelectPreferencesScreen extends ActionBarActivity {
     String PreferenceString;
     String UserID;
     String Inviter;
-   // Context context = this;
+    Context context = this;
 
 
     @Override
@@ -37,8 +37,9 @@ public class SelectPreferencesScreen extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_preferences_screen);
 
-        UserID = getIntent().getExtras().getString("passingUserName");
-        Inviter = getIntent().getExtras().getString("passingInviter");
+
+            UserID = getIntent().getExtras().getString("passingUserName");
+            Inviter = getIntent().getExtras().getString("passingInviter");
     }
 
 
@@ -142,15 +143,18 @@ public class SelectPreferencesScreen extends ActionBarActivity {
 
         new SendPreferences().execute("http://www.csce.uark.edu/~mrs018/SendInPreferences.php");
 
-        new AlertDialog.Builder(this).setTitle("variable")
+        /*new AlertDialog.Builder(this).setTitle("variable")
                 .setMessage(PreferenceString)
-                .show();
+                .show();*/
 
 
 
 
 
-        Intent intent = new Intent(this, UserAccountScreen.class);
+
+
+        Intent intent = new Intent(context, UserAccountScreen.class);
+        //intent.putExtra("serverResponse", UserID);
         startActivity(intent);
 
     }
