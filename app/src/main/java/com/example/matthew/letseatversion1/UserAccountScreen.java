@@ -121,10 +121,11 @@ public class UserAccountScreen extends ActionBarActivity {
 
     public void checkEventButtonClick(View view){
 
-        new CheckEvents().execute("http://www.csce.uark.edu/~mrs018/CheckEventInvites.php");
         //new CheckEvents().execute("http://www.csce.uark.edu/~mrs018/CheckEventInvites.php");
-
-
+        //new CheckEvents().execute("http://www.csce.uark.edu/~mrs018/CheckEventInvites.php");
+        Intent eventInbox = new Intent(getApplicationContext(), eventinbox.class);
+        eventInbox.putExtra("passingUsername", newUserID);
+        startActivity(eventInbox);
     }
 
     public void eventCheckFinished(){

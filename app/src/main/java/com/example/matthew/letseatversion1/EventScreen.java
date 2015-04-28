@@ -124,11 +124,11 @@ public class EventScreen extends ActionBarActivity {
     public void startInviteButtonClick(View view) {
 
 
-        EditText numberOfFriends = (EditText)findViewById(R.id.numberOfUsers);
+        //EditText numberOfFriends = (EditText)findViewById(R.id.numberOfUsers);
         EditText dateAndTime = (EditText)findViewById(R.id.dateAndTime);
         EditText location = (EditText)findViewById(R.id.location);
 
-        Friendnumber = numberOfFriends.getText().toString();
+        //Friendnumber = numberOfFriends.getText().toString();
         DateAndTime = dateAndTime.getText().toString();
         Location = location.getText().toString();
 

@@ -41,4 +41,5 @@
     <string name="title_activity_event_screen">EventScreen</string>
     <string name="title_activity_edit_account_screen">EditAccountScreen</string>
     <string name="title_activity_select_preferences_screen">SelectPreferencesScreen</string>
+    <string name="title_activity_inbox">Event Inbox</string>
 </resources>
