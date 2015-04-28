@@ -1,12 +1,16 @@
 package com.example.matthew.letseatversion1;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,8 +36,10 @@ import java.util.ArrayList;
 public class eventinbox extends ActionBarActivity
 {
     String username="";
+    String inviter;
     String[] list;
     JSONArray arr;
+    String serverResponse;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +53,7 @@ public class eventinbox extends ActionBarActivity
         if(getIntent().getExtras() != null && getIntent().getExtras().getString("passingUsername") != null)
         {
             username = getIntent().getExtras().getString("passingUsername");
+            serverResponse = getIntent().getExtras().getString("serverResponse");
             new CheckEvents().execute("http://www.csce.uark.edu/~mrs018/CheckEventInvites.php");
         }
 
@@ -128,13 +135,62 @@ public class eventinbox extends ActionBarActivity
                 listadapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.listentry, locations);
             listView.setAdapter(listadapter);
 
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View view,
+                                        final int position, long id) {
+
+                   ///try {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                        //JSONObject obj = arr.getJSONObject(position);
+                        builder.setMessage("would you like to accept or decline");
+                    // Set up the input
+
+                    // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+
+                    builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //Intent intent = new Intent(getBaseContext(), SelectPreferencesScreen.class);
+                            //intent.putExtra("serverResponse", serverResponse);
+                            try {
+                                //intent.putExtra("passingInviter", arr.getJSONObject(position).getString("inviter"));
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
+                            //startActivity(intent);
+
+                        }
+                    });
+
+                    builder.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                           /* try{
+                            inviter = arr.getJSONObject(position).getString("inviter");
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
+                            new declineInvite().execute("http://www.csce.uark.edu/~mrs018/SendInPreferences.php");*/
+                        }
+                    });
+                    builder.show();
+                    /*}catch (Exception e){
+                        e.printStackTrace();
+                    }*/
+                }
+            });
+            listView.setClickable(true);
+            listView.invalidate();
+
+
+
 
             /*if(list.length == 0)
             {
                 TextView empty = (TextView) findViewById(R.id.empty);
                 empty.setVisibility(View.VISIBLE);
             }*/
-            //important^^
+                //important^^
 
             /*checkInviteServerResponse = result;
             if(!checkInviteServerResponse.equalsIgnoreCase("[]")) {
@@ -147,12 +203,12 @@ public class eventinbox extends ActionBarActivity
                 /*new AlertDialog.Builder(context).setTitle("response from server")
                         .setMessage(result)
                         .setIcon(android.R.drawable.ic_dialog_alert).show();*/
-            //}
-            //eventCheckFinished()
+                //}
+                //eventCheckFinished()
 
-        }
+            }
 
-        @Override
+            @Override
         protected void onPreExecute() {
             // TODO Auto-generated method stub
 
@@ -174,6 +230,68 @@ public class eventinbox extends ActionBarActivity
                 nameValuePairs.add(new BasicNameValuePair("username", Username));
 
 
+                //makes a httpclient and sends the info to the server
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost method = new HttpPost(params[0]);
+                method.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+                HttpResponse response = httpclient.execute(method);
+                HttpEntity entity = response.getEntity();
+
+                //keep the stream open until all the data has been passed back
+                if(entity != null){
+                    return EntityUtils.toString(entity);
+                }
+                else{
+                    return "No string.";
+                }
+            }
+            catch(Exception e){
+                return "Network problem";
+            }
+
+        }
+    }
+
+    class declineInvite extends AsyncTask<String,String,String>
+    {
+        //holder strings that are used to pass info from LoginScreen class to HttpRequest class
+        String Username;
+        String Inviter;
+        String preferences;
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
+
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+
+            Username = username;
+            Inviter = inviter;
+            preferences = "000000000";
+
+
+            super.onPreExecute();
+        }
+
+        @Override
+        //this passing info to and from the app and server
+        //it is done on a separate thread so that it does not interfere with other task while the info is transferred
+        protected String doInBackground(String... params) {
+            try
+            {
+                //makes name value pairs to be passed to server
+                ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                nameValuePairs.add(new BasicNameValuePair("username", username));
+                nameValuePairs.add(new BasicNameValuePair("inviter", inviter));
+                nameValuePairs.add(new BasicNameValuePair("preferences", username));
                 //makes a httpclient and sends the info to the server
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpPost method = new HttpPost(params[0]);

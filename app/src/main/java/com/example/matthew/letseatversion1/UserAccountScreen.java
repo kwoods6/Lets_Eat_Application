@@ -125,6 +125,7 @@ public class UserAccountScreen extends ActionBarActivity {
         //new CheckEvents().execute("http://www.csce.uark.edu/~mrs018/CheckEventInvites.php");
         Intent eventInbox = new Intent(getApplicationContext(), eventinbox.class);
         eventInbox.putExtra("passingUsername", newUserID);
+        eventInbox.putExtra("serverResponse", serverResponse);
         startActivity(eventInbox);
     }
 
