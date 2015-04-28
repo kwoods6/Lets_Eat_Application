@@ -52,7 +52,7 @@
             android:label="@string/title_activity_select_preferences_screen" >
         </activity>
         <activity
-            android:name=".ResturantScreen"
+            android:name=".RestaurantScreen"
             android:label="@string/title_activity_resturant_screen"
             android:parentActivityName=".LoginScreen" >
             <meta-data

@@ -55,6 +55,8 @@ public class UserAccountScreen extends ActionBarActivity {
     TextView city;
     String[] tokens;
     String[] eventTokens;
+    int arrayLength;
+    ArrayList<String> list = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,13 +128,18 @@ public class UserAccountScreen extends ActionBarActivity {
     }
 
     public void eventCheckFinished(){
-        final Intent intent = new Intent(getBaseContext(), SelectPreferencesScreen.class);
-        intent.putExtra("serverResponse", serverResponse);
-        intent.putExtra("passingInviter", Inviter);
 
 
         if(invitation == true){
+            final Intent intent = new Intent(getBaseContext(), SelectPreferencesScreen.class);
+            intent.putExtra("serverResponse", serverResponse);
+            intent.putExtra("passingInviter", Inviter);
             invitation = false;
+
+            arrayLength = eventTokens.length;
+            new AlertDialog.Builder(context).setTitle("arrayLength var")
+                    .setMessage(arrayLength)
+                    .setIcon(android.R.drawable.ic_dialog_alert).show();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("you have an invite from " + Inviter + " \n at location " + location + "\n on " + dateandtime + "\n please accept or decline");
@@ -311,7 +318,7 @@ public class UserAccountScreen extends ActionBarActivity {
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub
             super.onPostExecute(result);
-           /* try
+            /*try
             {
                 JSONObject OBJ = new JSONObject(result);
                 JSONArray arr = OBJ.getJSONArray();
@@ -329,17 +336,24 @@ public class UserAccountScreen extends ActionBarActivity {
 
             }*/
             checkInviteServerResponse = result;
-            if(!checkInviteServerResponse.equalsIgnoreCase("[]")) {
+            /*new AlertDialog.Builder(context).setTitle("checkInviteServerResponse var")
+                    .setMessage(checkInviteServerResponse)
+                    .setIcon(android.R.drawable.ic_dialog_alert).show();*/
+            if(!checkInviteServerResponse.equalsIgnoreCase("null")) {
                 eventTokens = checkInviteServerResponse.split("\"");
                 Inviter = eventTokens[3];
                 dateandtime = eventTokens[7];
                 location = eventTokens[11];
                 invitation = true;
 
-                /*new AlertDialog.Builder(context).setTitle("response from server")
-                        .setMessage(result)
-                        .setIcon(android.R.drawable.ic_dialog_alert).show();*/
+                new AlertDialog.Builder(context).setTitle("blahh")
+                        .setMessage(eventTokens[3])
+                        .setIcon(android.R.drawable.ic_dialog_alert).show();
+
+
+                //list.add(checkInviteServerResponse);
             }
+            checkInviteServerResponse = "null";
             eventCheckFinished();
 
         }

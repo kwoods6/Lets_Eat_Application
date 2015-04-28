@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,12 +31,15 @@ import java.util.ArrayList;
 public class EventScreen extends ActionBarActivity {
 
     Context context = this;
-    String Username = "";
-    String Friendnumber = "";
-    String Friends = "";
-    String DateAndTime = "";
-    String Location = "";
-    int NumberOfFriends;
+    String Username;
+    String Friendnumber;
+    String Friends;
+    String DateAndTime;
+    String Location;
+    String serverResponse;
+    String[] tokens;
+    String newUserPassword;
+    ArrayList<String> buddies;
 
 
     @Override
@@ -43,7 +47,17 @@ public class EventScreen extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_screen);
 
-        Username = getIntent().getExtras().getString("passingUserName");
+        buddies = new ArrayList<String>();
+
+        if(getIntent().getExtras() != null) {
+
+            serverResponse = getIntent().getExtras().getString("serverResponse");
+
+            //tokens the string into usefull info
+            tokens = serverResponse.split("\"");
+            Username = tokens[3];
+            newUserPassword = tokens[7];
+        }
 
     }
 
@@ -71,6 +85,40 @@ public class EventScreen extends ActionBarActivity {
         //CreateEvent.php
     }
 
+    public void activate(){
+        String message = "Enter the username of your friend";
+        AlertDialog alert;
+        final EditText input = new EditText(this);
+        alert = new AlertDialog.Builder(EventScreen.this)
+                .setTitle("Update Status")
+                .setMessage(message)
+                .setView(input)
+                .setPositiveButton("Add Additional Friend", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Editable value = input.getText();
+                        if (!value.equals("")) {
+                            buddies.add(value.toString());
+                            activate();
+                        }
+                    }
+                }).setNegativeButton("Done", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Editable value = input.getText();
+                        if(!value.equals(""))
+                            buddies.add(value.toString());
+                        String output = "";
+                        for(int i = 0; i<buddies.size(); i++)
+                        {
+                            output += buddies.get(i) + ";";
+                        }
+                        output = output.substring(0,output.length() - 1);
+                        Friends = output;
+                        //Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
+                        buddies.clear();
+                    }
+                }).show();
+    }
+
 
 
     public void startInviteButtonClick(View view) {
@@ -84,9 +132,15 @@ public class EventScreen extends ActionBarActivity {
         DateAndTime = dateAndTime.getText().toString();
         Location = location.getText().toString();
 
-        NumberOfFriends = Integer.parseInt(Friendnumber);
+        //NumberOfFriends = Integer.parseInt(Friendnumber);
 
-        for(int i = 0; i < NumberOfFriends; i++)
+
+        activate();
+
+
+
+
+        /*for(int i = 0; i < NumberOfFriends; i++)
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("please enter the " + (i + 1) + " th/rd/nd/st user name");
@@ -112,7 +166,7 @@ public class EventScreen extends ActionBarActivity {
                 }
             });
             builder.show();
-        }
+        }*/
 
 
     }
@@ -125,19 +179,9 @@ public class EventScreen extends ActionBarActivity {
 
         new HttpRequest().execute("http://www.csce.uark.edu/~mrs018/CreateEvent.php");
 
-        try {
-            wait(5000);
-        }
-        catch(Exception e){
-            //error
-        }
-
-        Bundle bundle = new Bundle();
-        bundle.putString("passingUserName", Username);
-        bundle.putString("passingInviter", Username);
         Intent intent = new Intent(getBaseContext(), SelectPreferencesScreen.class);
-        intent.putExtra("passingUserName", Username);
-        intent.putExtra("passingInviter", Username);
+        intent.putExtra("serverResponse", serverResponse);
+        intent.putExtra("passingInviter" , Username);
         startActivity(intent);
     }
 

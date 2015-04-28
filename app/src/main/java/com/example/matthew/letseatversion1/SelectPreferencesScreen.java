@@ -1,6 +1,6 @@
 package com.example.matthew.letseatversion1;
 
-import android.app.AlertDialog;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -27,8 +27,12 @@ import java.util.ArrayList;
 public class SelectPreferencesScreen extends ActionBarActivity {
 
     String PreferenceString;
-    String UserID;
+    String user;
     String Inviter;
+    String serverResponse;
+    String newUserPassword;
+    String []tokens;
+
     Context context = this;
 
 
@@ -36,10 +40,15 @@ public class SelectPreferencesScreen extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_preferences_screen);
-
-
-            UserID = getIntent().getExtras().getString("passingUserName");
+        if(getIntent().getExtras() != null) {
+            serverResponse = getIntent().getExtras().getString("serverResponse");
             Inviter = getIntent().getExtras().getString("passingInviter");
+
+            //tokens the string into usefull info
+            tokens = serverResponse.split("\"");
+            user = tokens[3];
+            newUserPassword = tokens[7];
+        }
     }
 
 
@@ -150,19 +159,12 @@ public class SelectPreferencesScreen extends ActionBarActivity {
 
 
 
-
-
-
         Intent intent = new Intent(context, UserAccountScreen.class);
-        //intent.putExtra("serverResponse", UserID);
+        intent.putExtra("serverResponse", serverResponse);
         startActivity(intent);
 
     }
-/*public void bullshit()
-{
-    Intent intent = new Intent(context, UserAccountScreen.class);
-    startActivity(intent);
-}*/
+
 
 
     class SendPreferences extends AsyncTask<String,String,String>
@@ -171,7 +173,6 @@ public class SelectPreferencesScreen extends ActionBarActivity {
         String username;
         String inviter;
         String preferences;
-        //Context mattsucks;
 
 
 
@@ -179,7 +180,7 @@ public class SelectPreferencesScreen extends ActionBarActivity {
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub
             super.onPostExecute(result);
-           // bullshit();
+
 
 
         }
@@ -188,10 +189,10 @@ public class SelectPreferencesScreen extends ActionBarActivity {
         protected void onPreExecute() {
             // TODO Auto-generated method stub
 
-            username = UserID;
+            username = user;
             inviter = Inviter;
             preferences = PreferenceString;
-            //mattsucks = context;
+
 
             super.onPreExecute();
         }

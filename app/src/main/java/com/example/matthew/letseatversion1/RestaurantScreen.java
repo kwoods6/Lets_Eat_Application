@@ -1,15 +1,11 @@
 package com.example.matthew.letseatversion1;
 
-import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import org.apache.http.HttpEntity;
@@ -25,15 +21,67 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
-public class ResturantScreen extends ActionBarActivity {
+public class RestaurantScreen extends ActionBarActivity {
     String  whatWeAreDoing;
+    String testString = "105230134";
+    String restaurant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_resturant_screen);
+        setContentView(R.layout.activity_restaurant_screen);
+
+
+        char largest = testString.charAt(0);
+        int positionOfLargest = 0;
+
+        for(int i = 0; i < 9; i++){
+            if(largest < testString.charAt(i)){
+                largest = testString.charAt(i);
+                positionOfLargest++;
+            }
+            else if(largest == testString.charAt(i)){
+                int random = 1;
+                Random dice = new Random();
+                random = dice.nextInt(10);
+                if(random > 5){
+                    largest = testString.charAt(i);
+                    positionOfLargest++;
+                }
+            }
+        }
+
+        //if position is equal to somethign set string equal to the resturaunt
+        if(positionOfLargest == 0){
+            restaurant = "vegetarian";
+        }
+        else if(positionOfLargest == 1){
+            restaurant = "gluten free";
+        }
+        else if(positionOfLargest == 2){
+            restaurant = "vegan";
+        }
+        else if(positionOfLargest == 3){
+            restaurant = "korean";
+        }
+        else if(positionOfLargest == 4){
+            restaurant = "chinese";
+        }
+        else if(positionOfLargest == 5){
+            restaurant = "mexican";
+        }
+        else if(positionOfLargest == 6){
+            restaurant = "italian";
+        }
+        else if(positionOfLargest == 7){
+            restaurant = "french";
+        }
+        else{
+            restaurant = "american";
+        }
 
         new HttpRequestRest().execute("http://uaf59309.ddns.uark.edu/yelprequest.php");
     }
@@ -121,7 +169,7 @@ public class ResturantScreen extends ActionBarActivity {
         protected String doInBackground(String... params) {
             try {
                 ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                nameValuePairs.add(new BasicNameValuePair("term", "mexican"));
+                nameValuePairs.add(new BasicNameValuePair("term", "restaurant"));
                 nameValuePairs.add(new BasicNameValuePair("location", "springdale"));
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpPost method = new HttpPost(params[0]);
