@@ -26,6 +26,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -139,44 +140,58 @@ public class eventinbox extends ActionBarActivity
                 public void onItemClick(AdapterView<?> parent, View view,
                                         final int position, long id) {
 
-                   try {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(eventinbox.this);
-                        JSONObject obj = arr.getJSONObject(position);
-                        builder.setMessage("would you like to accept or decline");
-                    // Set up the input
+                   try
+                   {
+                       JSONObject obj = arr.getJSONObject(position);
+                       if (obj.getString("status").equalsIgnoreCase("started")) {
+                           AlertDialog.Builder builder = new AlertDialog.Builder(eventinbox.this);
 
-                    // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                           builder.setMessage("would you like to accept or decline");
+                           // Set up the input
 
-                    builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(getBaseContext(), SelectPreferencesScreen.class);
-                            intent.putExtra("serverResponse", serverResponse);
-                            try {
-                                intent.putExtra("passingInviter", arr.getJSONObject(position).getString("inviter"));
-                            }catch(Exception e){
-                                e.printStackTrace();
-                            }
-                            startActivity(intent);
+                           // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
 
-                        }
-                    });
+                           builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(DialogInterface dialog, int which) {
+                                   Intent intent = new Intent(getBaseContext(), SelectPreferencesScreen.class);
+                                   intent.putExtra("serverResponse", serverResponse);
+                                   try {
+                                       intent.putExtra("passingInviter", arr.getJSONObject(position).getString("inviter"));
+                                   } catch (Exception e) {
+                                       e.printStackTrace();
+                                   }
+                                   startActivity(intent);
 
-                    builder.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            try{
-                            inviter = arr.getJSONObject(position).getString("inviter");
-                            }catch(Exception e){
-                                e.printStackTrace();
-                            }
-                            new declineInvite().execute("http://www.csce.uark.edu/~mrs018/SendInPreferences.php");
-                        }
-                    });
-                    builder.show();
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
+                               }
+                           });
+
+                           builder.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(DialogInterface dialog, int which) {
+                                   try {
+                                       inviter = arr.getJSONObject(position).getString("inviter");
+                                   } catch (Exception e) {
+                                       e.printStackTrace();
+                                   }
+                                   new declineInvite().execute("http://www.csce.uark.edu/~mrs018/SendInPreferences.php");
+                               }
+                           });
+                           builder.show();
+                       }
+                       else if(obj.getString("status").equalsIgnoreCase("pending"))
+                       {
+                           Intent intent = new Intent(eventinbox.this, RestaurantScreen.class);
+                           intent.putExtra("serverResponse", serverResponse);
+                           intent.putExtra("inviter", inviter);
+                           intent.putExtra("username", username);
+                           intent.putExtra("preferences", obj.getString("totalpreferences"));
+                           intent.putExtra("location", obj.getString("location"));
+                           startActivity(intent);
+                       }
+                       }catch(Exception e){
+                           e.printStackTrace();
+                       }
                 }
             });
             listView.setClickable(true);

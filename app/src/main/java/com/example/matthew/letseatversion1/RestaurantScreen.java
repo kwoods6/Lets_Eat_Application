@@ -26,29 +26,41 @@ import java.util.Random;
 
 public class RestaurantScreen extends ActionBarActivity {
     String  whatWeAreDoing;
-    String testString = "105230134";
+    String preferences; //= "105230134";
     String restaurant;
+    String username;
+    String inviter;
+    String serverResponse;
+    String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_screen);
-
-
-        char largest = testString.charAt(0);
+        
+        preferences = getIntent().getExtras().getString("preferences");
+        username = getIntent().getExtras().getString("username");
+        inviter = getIntent().getExtras().getString("inviter");
+        serverResponse = getIntent().getExtras().getString("serverResponse");
+        location = getIntent().getExtras().getString("location");
+        for(int i = 0; i<9-preferences.length();i++)
+        {
+            preferences = "0" + preferences;
+        }
+        char largest = preferences.charAt(0);
         int positionOfLargest = 0;
 
-        for(int i = 0; i < 9; i++){
-            if(largest < testString.charAt(i)){
-                largest = testString.charAt(i);
+        for(int i = 0; i < 8; i++){
+            if(largest < preferences.charAt(i)){
+                largest = preferences.charAt(i);
                 positionOfLargest++;
             }
-            else if(largest == testString.charAt(i)){
+            else if(largest == preferences.charAt(i)){
                 int random = 1;
                 Random dice = new Random();
                 random = dice.nextInt(10);
                 if(random > 5){
-                    largest = testString.charAt(i);
+                    largest = preferences.charAt(i);
                     positionOfLargest++;
                 }
             }
@@ -161,7 +173,8 @@ public class RestaurantScreen extends ActionBarActivity {
         @Override
         protected void onPreExecute() {
             // TODO Auto-generated method stub
-
+            Term = restaurant;
+            Local = location;
             super.onPreExecute();
         }
 
@@ -169,8 +182,8 @@ public class RestaurantScreen extends ActionBarActivity {
         protected String doInBackground(String... params) {
             try {
                 ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                nameValuePairs.add(new BasicNameValuePair("term", "restaurant"));
-                nameValuePairs.add(new BasicNameValuePair("location", "springdale"));
+                nameValuePairs.add(new BasicNameValuePair("term", Term));
+                nameValuePairs.add(new BasicNameValuePair("location", Local));
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpPost method = new HttpPost(params[0]);
                 method.setEntity(new UrlEncodedFormEntity(nameValuePairs));

@@ -113,7 +113,7 @@ public class UserAccountScreen extends ActionBarActivity {
 
     //when the search button is clicked it bundles the username and sends that to the next activity
     public void createEventButtonClick(View view) {
-        Intent intent = new Intent(getBaseContext(), EventScreen.class);
+        Intent intent = new Intent(getBaseContext(),EventScreen.class);
         intent.putExtra("serverResponse", serverResponse);
         startActivity(intent);
 
