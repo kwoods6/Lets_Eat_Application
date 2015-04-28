@@ -139,9 +139,9 @@ public class eventinbox extends ActionBarActivity
                 public void onItemClick(AdapterView<?> parent, View view,
                                         final int position, long id) {
 
-                   ///try {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-                        //JSONObject obj = arr.getJSONObject(position);
+                   try {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(eventinbox.this);
+                        JSONObject obj = arr.getJSONObject(position);
                         builder.setMessage("would you like to accept or decline");
                     // Set up the input
 
@@ -150,14 +150,14 @@ public class eventinbox extends ActionBarActivity
                     builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            //Intent intent = new Intent(getBaseContext(), SelectPreferencesScreen.class);
-                            //intent.putExtra("serverResponse", serverResponse);
+                            Intent intent = new Intent(getBaseContext(), SelectPreferencesScreen.class);
+                            intent.putExtra("serverResponse", serverResponse);
                             try {
-                                //intent.putExtra("passingInviter", arr.getJSONObject(position).getString("inviter"));
+                                intent.putExtra("passingInviter", arr.getJSONObject(position).getString("inviter"));
                             }catch(Exception e){
                                 e.printStackTrace();
                             }
-                            //startActivity(intent);
+                            startActivity(intent);
 
                         }
                     });
@@ -165,18 +165,18 @@ public class eventinbox extends ActionBarActivity
                     builder.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                           /* try{
+                            try{
                             inviter = arr.getJSONObject(position).getString("inviter");
                             }catch(Exception e){
                                 e.printStackTrace();
                             }
-                            new declineInvite().execute("http://www.csce.uark.edu/~mrs018/SendInPreferences.php");*/
+                            new declineInvite().execute("http://www.csce.uark.edu/~mrs018/SendInPreferences.php");
                         }
                     });
                     builder.show();
-                    /*}catch (Exception e){
+                    }catch (Exception e){
                         e.printStackTrace();
-                    }*/
+                    }
                 }
             });
             listView.setClickable(true);

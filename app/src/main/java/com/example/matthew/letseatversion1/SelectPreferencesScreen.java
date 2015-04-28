@@ -1,6 +1,7 @@
 package com.example.matthew.letseatversion1;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -95,10 +96,10 @@ public class SelectPreferencesScreen extends ActionBarActivity {
         }
         if(checkBox8.isChecked() ){
 
-            PreferenceString = "1";
+            PreferenceString += "1";
         }
         else{
-            PreferenceString = "0";
+            PreferenceString += "0";
         }
         if(checkBox7.isChecked()){
 
@@ -152,17 +153,6 @@ public class SelectPreferencesScreen extends ActionBarActivity {
 
         new SendPreferences().execute("http://www.csce.uark.edu/~mrs018/SendInPreferences.php");
 
-        /*new AlertDialog.Builder(this).setTitle("variable")
-                .setMessage(PreferenceString)
-                .show();*/
-
-
-
-
-        Intent intent = new Intent(context, UserAccountScreen.class);
-        intent.putExtra("serverResponse", serverResponse);
-        startActivity(intent);
-
     }
 
 
@@ -180,6 +170,10 @@ public class SelectPreferencesScreen extends ActionBarActivity {
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub
             super.onPostExecute(result);
+
+            Intent intent = new Intent(context, UserAccountScreen.class);
+            intent.putExtra("serverResponse", serverResponse);
+            startActivity(intent);
 
 
 
@@ -207,7 +201,7 @@ public class SelectPreferencesScreen extends ActionBarActivity {
                 ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                 nameValuePairs.add(new BasicNameValuePair("username", username));
                 nameValuePairs.add(new BasicNameValuePair("inviter", inviter));
-                nameValuePairs.add(new BasicNameValuePair("preferences", username));
+                nameValuePairs.add(new BasicNameValuePair("preferences", preferences));
                 //makes a httpclient and sends the info to the server
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpPost method = new HttpPost(params[0]);
