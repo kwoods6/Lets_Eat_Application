@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +42,8 @@ public class eventinbox extends ActionBarActivity
     String[] list;
     JSONArray arr;
     String serverResponse;
+    int winner;
+    String finalDecision;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,6 +146,7 @@ public class eventinbox extends ActionBarActivity
                    try
                    {
                        JSONObject obj = arr.getJSONObject(position);
+                       inviter = obj.getString("inviter");
                        if (obj.getString("status").equalsIgnoreCase("started")) {
                            AlertDialog.Builder builder = new AlertDialog.Builder(eventinbox.this);
 
@@ -188,6 +192,37 @@ public class eventinbox extends ActionBarActivity
                            intent.putExtra("preferences", obj.getString("totalpreferences"));
                            intent.putExtra("location", obj.getString("location"));
                            startActivity(intent);
+                       }
+                       else if(obj.getString("status").equalsIgnoreCase("completed"))
+                       {
+                           String prefs = obj.getString("totalpreferences");
+                           int maxpref = 0;
+                           winner = 0;
+                           String votes = obj.getString("suggestions");
+
+                           for(int i = 1; i<prefs.length();i++)
+                           {
+                               if(prefs.charAt(i) > prefs.charAt(maxpref))
+                               {
+                                   maxpref = i;
+                               }
+
+                           }
+                           for(int i = 1; i < votes.length();i++)
+                           {
+                               if(votes.charAt(i) > votes.charAt(winner))
+                               {
+                                   winner = i;
+                               }
+                           }
+                           String[] categories = getResources().getStringArray(R.array.restaurantTypes);
+                           String category = categories[maxpref];
+                           String[] parameters = {"http://uaf59309.ddns.uark.edu/yelprequest.php", category, obj.getString("location")};
+                           new HttpRequestRest().execute(parameters);
+
+
+
+
                        }
                        }catch(Exception e){
                            e.printStackTrace();
@@ -328,6 +363,83 @@ public class eventinbox extends ActionBarActivity
             }
 
         }
+    }
+
+
+    class HttpRequestRest extends AsyncTask<String,String,String>
+    {
+
+
+
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
+
+            try {
+
+                JSONObject jobject = new JSONObject(result);
+                //String list = "";
+                JSONArray jarray = jobject.getJSONArray("businesses");
+                JSONObject obj =jarray.getJSONObject(winner);
+
+
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(eventinbox.this);
+                builder.setTitle("Final decision");
+                JSONObject address = (JSONObject) obj.getJSONObject("location");
+                JSONArray display_address = address.getJSONArray("display_address");
+                //String finaladdress = "";
+                //for(int i = 0; i < display_address.length(); i++)
+                 //   finaladdress+= display_address.getString(i);
+                String finaladdress = display_address.getString(0) + " " + display_address.getString(display_address.length() - 1);
+                builder.setMessage("Name:" + obj.getString("name") +"\nRating: " + obj.getString("rating") + "\nPhone: " + obj.getString("display_phone") + "\nAddress: " + finaladdress);
+                // Set up the input
+
+                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+
+
+                builder.show();
+
+
+            } catch (Exception e) {
+                Log.e(e.getClass().getName(), e.getMessage(), e);
+            }
+        }
+
+
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                nameValuePairs.add(new BasicNameValuePair("term", params[1]));
+                nameValuePairs.add(new BasicNameValuePair("location", params[2]));
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost method = new HttpPost(params[0]);
+                method.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+                HttpResponse response = httpclient.execute(method);
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    return EntityUtils.toString(entity);
+                } else {
+                    return "No string.";
+                }
+            } catch (Exception e) {
+                return "Network problem";
+            }
+        }
+
     }
 
 }

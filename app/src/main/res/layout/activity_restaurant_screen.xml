@@ -13,6 +13,7 @@
         android:id="@+id/textView2"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
+        android:visibility="invisible"
         android:layout_alignParentEnd="true" />
 
     <CheckBox
@@ -69,7 +70,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="vote"
-        android:id="@+id/button3"
+        android:id="@+id/votebtn"
+        android:onClick="vote"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/restaurantList"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/button3"
+        android:layout_centerHorizontal="true"
+        android:divider="#FFFFFF"/>
 </RelativeLayout>

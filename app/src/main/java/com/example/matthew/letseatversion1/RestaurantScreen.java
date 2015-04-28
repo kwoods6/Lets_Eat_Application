@@ -1,12 +1,18 @@
 package com.example.matthew.letseatversion1;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -32,7 +38,9 @@ public class RestaurantScreen extends ActionBarActivity {
     String inviter;
     String serverResponse;
     String location;
-
+    String voteCount;
+    String[] list;
+    boolean[] state;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,15 +62,6 @@ public class RestaurantScreen extends ActionBarActivity {
             if(largest < preferences.charAt(i)){
                 largest = preferences.charAt(i);
                 positionOfLargest++;
-            }
-            else if(largest == preferences.charAt(i)){
-                int random = 1;
-                Random dice = new Random();
-                random = dice.nextInt(10);
-                if(random > 5){
-                    largest = preferences.charAt(i);
-                    positionOfLargest++;
-                }
             }
         }
 
@@ -121,6 +120,22 @@ public class RestaurantScreen extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void vote(View view)
+    {
+        voteCount = "";
+        for(int i = 0; i<state.length;i++)
+        {
+            if(state[i])
+                voteCount += "1";
+            else
+                voteCount += "0";
+        }
+        Toast toast = Toast.makeText(RestaurantScreen.this, voteCount + "~~" + inviter, Toast.LENGTH_LONG);
+        toast.show();
+        new SendInRestaurants().execute("http://turing.uark.edu/~mrs018/SendInRestaurants.php");
+
+    }
+
 
 
     class HttpRequestRest extends AsyncTask<String,String,String>
@@ -135,6 +150,7 @@ public class RestaurantScreen extends ActionBarActivity {
         String Local;
         String Term;
 
+
         @Override
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub
@@ -143,8 +159,10 @@ public class RestaurantScreen extends ActionBarActivity {
                 try {
 
                     JSONObject jobject = new JSONObject(result);
-                    String list = "";
+                    //String list = "";
                     JSONArray jarray = jobject.getJSONArray("businesses");
+                    list = new String[jarray.length()];
+                    state = new boolean[list.length];
                     for (int i = 0; i < jarray.length(); i++) {
                         JSONObject json_data = jarray.getJSONObject(i);
                         String restaurantName = json_data.getString("name");
@@ -154,11 +172,37 @@ public class RestaurantScreen extends ActionBarActivity {
                         JSONArray display_address = address.getJSONArray("display_address");
                         String finaladdress = display_address.getString(0) + " " + display_address.getString(1);
                         String realAddress = address.getString("address");
-                        String formattedString = restaurantName + "\n" + rating + "\n" + phone + "\n" + finaladdress + "\n\n";
-                        list += formattedString;
+                        String formattedString = restaurantName + "\n" + rating + "\n" + phone + "\n" + finaladdress;
+                        list[i] = formattedString;
                     }
-                    TextView text = (TextView) findViewById(R.id.textView2);
-                    text.setText(list);
+
+                    ArrayAdapter<String> listadapter;
+                    if(list != null)
+                    {
+                        ListView listView = (ListView) findViewById(R.id.restaurantList);
+                        listView.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+                        listadapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.listentry, list);
+                        listView.setAdapter(listadapter);
+
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            public void onItemClick(AdapterView<?> parent, View view,
+                                                    final int position, long id)
+                            {
+                                if(state[position]) {
+                                    view.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+                                    state[position] = false;
+                                }
+                                else {
+                                    view.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+                                    state[position] = true;
+                                }
+                            }
+                        });
+                        listView.invalidate();
+                    }
+
+                            //TextView text = (TextView) findViewById(R.id.textView2);
+                    //text.setText(list);
                     //new AlertDialog.Builder(getBaseContext()).setTitle("test results")
                          //   .setMessage(list)
                          //   .setIcon(android.R.drawable.ic_dialog_alert).show();
@@ -201,5 +245,67 @@ public class RestaurantScreen extends ActionBarActivity {
         }
 
         }
+
+
+    //**********************************************
+
+
+    class SendInRestaurants extends AsyncTask<String,String,String>
+    {
+
+        String Username;
+        String Inviter;
+        String restaurants;
+
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
+            Toast.makeText(RestaurantScreen.this, result, Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(RestaurantScreen.this, eventinbox.class);
+            intent.putExtra("serverResponse", serverResponse);
+            intent.putExtra("passingUsername", username);
+            //startActivity(intent);
+
+        }
+
+
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            Username = username;
+            restaurants = voteCount;
+            Inviter = inviter;
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                nameValuePairs.add(new BasicNameValuePair("username", Username));
+                nameValuePairs.add(new BasicNameValuePair("restaurants", restaurants));
+                nameValuePairs.add(new BasicNameValuePair("inviter", Inviter));
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost method = new HttpPost(params[0]);
+                method.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+                HttpResponse response = httpclient.execute(method);
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    return EntityUtils.toString(entity);
+                } else {
+                    return "No string.";
+                }
+            } catch (Exception e) {
+                return "Network problem";
+            }
+        }
+
+    }
+
+
+
     }
 

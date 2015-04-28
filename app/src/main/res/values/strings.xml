@@ -2,9 +2,14 @@
     <string name="app_name">Lets Eat Version 1</string>
     <string name="title_activity_account_creation_screen">accountCreationScreen</string>
     <string-array name="restaurantTypes">
-        <item>Chinese</item>
-        <item>Italian</item>
-        <item>Mexican</item>
+        <item>vegetarian</item>
+        <item>gluten free</item>
+        <item>vegan</item>
+        <item>korean</item>
+        <item>chinese</item>
+        <item>mexican</item>
+        <item>italian</item>
+        <item>french</item>
     </string-array>
     <string-array
         name="Mexican">
