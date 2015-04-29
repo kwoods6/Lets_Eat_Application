@@ -1,6 +1,7 @@
 package com.example.matthew.letseatversion1;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -94,12 +95,7 @@ Context context = this;
     //this methos is called to pass info to the account screen
     //it bundles the returned JSON object as a string
     public void  passingAccountInfo(String result){
-        Bundle bundle = new Bundle();
-        bundle.putString("serverResponse", result);
-        Intent intent = new Intent(getBaseContext(), UserAccountScreen.class);
-        intent.putExtra("serverResponse", result);
-        startActivity(intent);
-        finish();
+
 
 
     }
@@ -110,12 +106,16 @@ class HttpRequest extends AsyncTask<String,String,String>
     //holder strings that are used to pass info from LoginScreen class to HttpRequest class
     String username;
     String password;
+    ProgressDialog dialog;
 
     @Override
     protected void onPostExecute(String result) {
         // TODO Auto-generated method stub
         super.onPostExecute(result);
-
+        if(dialog.isShowing())
+        {
+           dialog.dismiss();
+        }
         //this checks the result the server sent back to see if the info to login
         //was valid
         if(result.equalsIgnoreCase("Please fill out all form entries") == true) {
@@ -129,7 +129,13 @@ class HttpRequest extends AsyncTask<String,String,String>
                        .setIcon(android.R.drawable.ic_dialog_alert).show();
         }
         else{
-            passingAccountInfo(result);
+            Bundle bundle = new Bundle();
+            bundle.putString("serverResponse", result);
+            Intent intent = new Intent(getBaseContext(), UserAccountScreen.class);
+            intent.putExtra("serverResponse", result);
+            startActivity(intent);
+            dialog.dismiss();
+            finish();
         }
 
     }
@@ -139,6 +145,8 @@ class HttpRequest extends AsyncTask<String,String,String>
         // TODO Auto-generated method stub
         username = loginFromUser;
         password = passwordFromUser;
+        dialog = new ProgressDialog(LoginScreen.this);
+        dialog.show();
         super.onPreExecute();
     }
 

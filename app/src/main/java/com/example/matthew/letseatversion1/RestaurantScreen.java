@@ -1,5 +1,6 @@
 package com.example.matthew.letseatversion1;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -255,12 +256,15 @@ public class RestaurantScreen extends ActionBarActivity {
         String Username;
         String Inviter;
         String restaurants;
+        ProgressDialog dialog;
 
         @Override
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub
             super.onPostExecute(result);
             //Toast.makeText(RestaurantScreen.this, result, Toast.LENGTH_LONG).show();
+            if(dialog.isShowing())
+                dialog.dismiss();
             Intent intent = new Intent(RestaurantScreen.this, eventinbox.class);
             intent.putExtra("serverResponse", serverResponse);
             intent.putExtra("passingUsername", username);
@@ -274,10 +278,13 @@ public class RestaurantScreen extends ActionBarActivity {
         @Override
         protected void onPreExecute() {
             // TODO Auto-generated method stub
+            super.onPreExecute();
             Username = username;
             restaurants = voteCount;
             Inviter = inviter;
-            super.onPreExecute();
+            dialog = new ProgressDialog(RestaurantScreen.this);
+            dialog.show();
+
         }
 
         @Override

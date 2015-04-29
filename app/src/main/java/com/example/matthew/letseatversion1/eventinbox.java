@@ -118,8 +118,10 @@ public class eventinbox extends ActionBarActivity
                         JSONObject invite = arr.getJSONObject(i);
                         String inviter = invite.getString("inviter");
                         list[i] = "Event Creator: " + inviter + "\n";
+                        list[i] += "Status: " + invite.getString("status") + "\n";
                         list[i] += "Location: " + invite.getString("location") + "\n";
-                        list[i] += "Date and Time: " + invite.getString("dateandtime");
+                        list[i] += "Date and Time: " + invite.getString("dateandtime") + "\n";
+
 
                     }
                 }
