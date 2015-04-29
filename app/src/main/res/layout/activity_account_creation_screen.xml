@@ -17,7 +17,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:nextFocusDown="@+id/newPassword"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -28,7 +29,8 @@
         android:layout_alignLeft="@+id/newUsername"
         android:layout_alignStart="@+id/newUsername"
         android:layout_alignRight="@+id/newUsername"
-        android:layout_alignEnd="@+id/newUsername" />
+        android:layout_alignEnd="@+id/newUsername"
+        android:nextFocusDown="@+id/newFirstName"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -49,7 +51,8 @@
         android:layout_alignLeft="@+id/newPassword"
         android:layout_alignStart="@+id/newPassword"
         android:layout_alignRight="@+id/newPassword"
-        android:layout_alignEnd="@+id/newPassword" />
+        android:layout_alignEnd="@+id/newPassword"
+        android:nextFocusDown="@+id/newLastName"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -60,7 +63,8 @@
         android:layout_alignLeft="@+id/newFirstname"
         android:layout_alignStart="@+id/newFirstname"
         android:layout_alignRight="@+id/newFirstname"
-        android:layout_alignEnd="@+id/newFirstname" />
+        android:layout_alignEnd="@+id/newFirstname"
+        android:nextFocusDown="@+id/newCity"/>
 
     <EditText
         android:layout_width="wrap_content"

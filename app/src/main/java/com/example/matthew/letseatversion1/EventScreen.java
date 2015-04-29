@@ -179,10 +179,7 @@ public class EventScreen extends ActionBarActivity {
 
         new HttpRequest().execute("http://www.csce.uark.edu/~mrs018/CreateEvent.php");
 
-        Intent intent = new Intent(getBaseContext(), SelectPreferencesScreen.class);
-        intent.putExtra("serverResponse", serverResponse);
-        intent.putExtra("passingInviter" , Username);
-        startActivity(intent);
+
     }
 
 
@@ -207,7 +204,11 @@ public class EventScreen extends ActionBarActivity {
             new AlertDialog.Builder(context).setTitle("response from server")
                     .setMessage(result)
                     .setIcon(android.R.drawable.ic_dialog_alert).show();
-
+            Intent intent = new Intent(getBaseContext(), SelectPreferencesScreen.class);
+            intent.putExtra("serverResponse", serverResponse);
+            intent.putExtra("passingInviter" , Username);
+            startActivity(intent);
+            finish();
         }
 
         @Override

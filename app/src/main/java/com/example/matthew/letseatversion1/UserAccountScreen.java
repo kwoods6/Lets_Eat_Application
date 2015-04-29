@@ -202,6 +202,12 @@ public class UserAccountScreen extends ActionBarActivity {
         whatWeAreDoing = "deleteAccount";
         new HttpRequest().execute("http://www.csce.uark.edu/~mrs018/Delete.php");
     }
+    public void logout(View view)
+    {
+        Intent intent = new Intent(UserAccountScreen.this, LoginScreen.class);
+        startActivity(intent);
+        finish();
+    }
 
     //this variable is used to make new intents when in another class
     Context context = this;

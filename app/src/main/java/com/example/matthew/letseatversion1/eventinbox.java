@@ -156,7 +156,7 @@ public class eventinbox extends ActionBarActivity
                            JSONArray invitees = obj.getJSONArray("invitees");
                            String inviteeString = "Members:\n";
                            for(int i = 0; i < invitees.length() / 3; i++)
-                               inviteeString += "Name: " + invitees.getString(i * 3) + " " + invitees.getString((i*3) + 1) + "\n" + "Location: " + invitees.getString((i * 3) + 2) + "\n\n";
+                               inviteeString += "Name: " + invitees.getString(i * 3) + " " + invitees.getString((i*3) + 1) + "\n" + "Hometown: " + invitees.getString((i * 3) + 2) + "\n\n";
 
                            builder.setMessage(inviteeString);
                            // Set up the input

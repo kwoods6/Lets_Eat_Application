@@ -265,6 +265,7 @@ public class RestaurantScreen extends ActionBarActivity {
             intent.putExtra("serverResponse", serverResponse);
             intent.putExtra("passingUsername", username);
             startActivity(intent);
+            finish();
 
         }
 

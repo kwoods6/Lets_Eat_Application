@@ -174,7 +174,7 @@ public class SelectPreferencesScreen extends ActionBarActivity {
             Intent intent = new Intent(context, UserAccountScreen.class);
             intent.putExtra("serverResponse", serverResponse);
             startActivity(intent);
-
+            finish();
 
 
         }

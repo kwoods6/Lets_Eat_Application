@@ -105,4 +105,13 @@
         android:layout_below="@+id/deleteAccountButton"
         android:layout_centerHorizontal="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:id="@+id/logout"
+        android:onClick="logout"
+        android:layout_below="@+id/edit"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

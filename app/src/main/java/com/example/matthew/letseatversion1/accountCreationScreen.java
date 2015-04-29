@@ -120,6 +120,7 @@ public class accountCreationScreen extends ActionBarActivity {
 
             Intent intent = new Intent(context, LoginScreen.class);
             startActivity(intent);
+            finish();
 
         }
 

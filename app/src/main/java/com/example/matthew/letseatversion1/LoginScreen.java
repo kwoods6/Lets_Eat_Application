@@ -84,6 +84,7 @@ public class LoginScreen extends ActionBarActivity {
     public void startCreatingAccountButtonClick(View view) {
         Intent intent = new Intent(this, accountCreationScreen.class);
         startActivity(intent);
+        finish();
     }
 
 
@@ -98,6 +99,7 @@ Context context = this;
         Intent intent = new Intent(getBaseContext(), UserAccountScreen.class);
         intent.putExtra("serverResponse", result);
         startActivity(intent);
+        finish();
 
 
     }
