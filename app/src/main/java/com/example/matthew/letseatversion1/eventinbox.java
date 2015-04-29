@@ -235,11 +235,11 @@ public class eventinbox extends ActionBarActivity
 
 
 
-            /*if(list.length == 0)
+            if(list.length == 0)
             {
                 TextView empty = (TextView) findViewById(R.id.empty);
                 empty.setVisibility(View.VISIBLE);
-            }*/
+            }
                 //important^^
 
             /*checkInviteServerResponse = result;

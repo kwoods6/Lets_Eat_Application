@@ -130,8 +130,8 @@ public class RestaurantScreen extends ActionBarActivity {
             else
                 voteCount += "0";
         }
-        Toast toast = Toast.makeText(RestaurantScreen.this, voteCount + "~~" + inviter, Toast.LENGTH_LONG);
-        toast.show();
+        //Toast toast = Toast.makeText(RestaurantScreen.this, voteCount + "~~" + inviter, Toast.LENGTH_LONG);
+        //toast.show();
         new SendInRestaurants().execute("http://turing.uark.edu/~mrs018/SendInRestaurants.php");
 
     }
@@ -261,11 +261,11 @@ public class RestaurantScreen extends ActionBarActivity {
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub
             super.onPostExecute(result);
-            Toast.makeText(RestaurantScreen.this, result, Toast.LENGTH_LONG).show();
+            //Toast.makeText(RestaurantScreen.this, result, Toast.LENGTH_LONG).show();
             Intent intent = new Intent(RestaurantScreen.this, eventinbox.class);
             intent.putExtra("serverResponse", serverResponse);
             intent.putExtra("passingUsername", username);
-            //startActivity(intent);
+            startActivity(intent);
 
         }
 
