@@ -55,13 +55,12 @@ public class RestaurantScreen extends ActionBarActivity {
         {
             preferences = "0" + preferences;
         }
-        char largest = preferences.charAt(0);
+        //char largest = preferences.charAt(0);
         int positionOfLargest = 0;
 
         for(int i = 0; i < 8; i++){
-            if(largest < preferences.charAt(i)){
-                largest = preferences.charAt(i);
-                positionOfLargest++;
+            if(preferences.charAt(positionOfLargest) < preferences.charAt(i)){
+                positionOfLargest = i;
             }
         }
 

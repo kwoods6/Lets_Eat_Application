@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -43,6 +44,7 @@ public class eventinbox extends ActionBarActivity
     JSONArray arr;
     String serverResponse;
     int winner;
+    String finaladdress;
     String finalDecision;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +152,13 @@ public class eventinbox extends ActionBarActivity
                        if (obj.getString("status").equalsIgnoreCase("started")) {
                            AlertDialog.Builder builder = new AlertDialog.Builder(eventinbox.this);
 
-                           builder.setMessage("would you like to accept or decline");
+                           builder.setTitle("Would you like to accept or decline?");
+                           JSONArray invitees = obj.getJSONArray("invitees");
+                           String inviteeString = "Members:\n";
+                           for(int i = 0; i < invitees.length() / 3; i++)
+                               inviteeString += "Name: " + invitees.getString(i * 3) + " " + invitees.getString((i*3) + 1) + "\n" + "Location: " + invitees.getString((i * 3) + 2) + "\n\n";
+
+                           builder.setMessage(inviteeString);
                            // Set up the input
 
                            // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
@@ -199,7 +207,10 @@ public class eventinbox extends ActionBarActivity
                            int maxpref = 0;
                            winner = 0;
                            String votes = obj.getString("suggestions");
-
+                           for(int i = 0; i < 5 - votes.length();i++)
+                               votes = "0" + votes;
+                           for(int i = 0; i < 9 - prefs.length();i++)
+                               prefs = 0 + prefs;
                            for(int i = 1; i<prefs.length();i++)
                            {
                                if(prefs.charAt(i) > prefs.charAt(maxpref))
@@ -390,13 +401,34 @@ public class eventinbox extends ActionBarActivity
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(eventinbox.this);
                 builder.setTitle("Final decision");
+
+
+
                 JSONObject address = (JSONObject) obj.getJSONObject("location");
                 JSONArray display_address = address.getJSONArray("display_address");
                 //String finaladdress = "";
                 //for(int i = 0; i < display_address.length(); i++)
                  //   finaladdress+= display_address.getString(i);
-                String finaladdress = display_address.getString(0) + " " + display_address.getString(display_address.length() - 1);
+                finaladdress = display_address.getString(0) + " " + display_address.getString(display_address.length() - 1);
                 builder.setMessage("Name:" + obj.getString("name") +"\nRating: " + obj.getString("rating") + "\nPhone: " + obj.getString("display_phone") + "\nAddress: " + finaladdress);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+                    }
+                });
+                builder.setNegativeButton("Navigate", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                                Uri.parse("google.navigation:q=" + finaladdress.replaceAll(" ", "+")));
+                        startActivity(intent);
+
+                    }
+                });
+
                 // Set up the input
 
                 // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
