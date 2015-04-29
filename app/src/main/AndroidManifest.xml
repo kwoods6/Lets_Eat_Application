@@ -15,7 +15,8 @@
         android:theme="@style/AppTheme" >
 
         <activity android:name=".eventinbox"
-            android:value="com.example.matthew.letseatversion1.eventinbox" >
+            android:value="com.example.matthew.letseatversion1.eventinbox"
+            android:parentActivityName=".UserAccountScreen">
         </activity>
 
         <activity
@@ -66,7 +67,8 @@
         </activity>
         <activity
             android:name=".Inbox"
-            android:label="@string/title_activity_inbox" >
+            android:label="@string/title_activity_inbox"
+            >
         </activity>
     </application>
 

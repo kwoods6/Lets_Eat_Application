@@ -150,8 +150,8 @@ public class SelectPreferencesScreen extends ActionBarActivity {
         else{
             PreferenceString += "0";
         }
-
-        new SendPreferences().execute("http://www.csce.uark.edu/~mrs018/SendInPreferences.php");
+        if(!PreferenceString.equalsIgnoreCase("000000000"))
+            new SendPreferences().execute("http://www.csce.uark.edu/~mrs018/SendInPreferences.php");
 
     }
 

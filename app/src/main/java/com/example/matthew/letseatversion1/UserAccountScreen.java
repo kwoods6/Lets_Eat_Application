@@ -2,6 +2,7 @@ package com.example.matthew.letseatversion1;
 
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -55,6 +56,7 @@ public class UserAccountScreen extends ActionBarActivity {
     TextView city;
     String[] tokens;
     String[] eventTokens;
+    ProgressDialog dialog;
     int arrayLength;
     ArrayList<String> list = new ArrayList<String>();
 
@@ -74,8 +76,14 @@ public class UserAccountScreen extends ActionBarActivity {
 
             //tokens the string into usefull info
             tokens = serverResponse.split("\"");
-
-            newUserID = tokens[3];
+            try {
+                newUserID = (new JSONObject(serverResponse)).getString("username");
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+            //newUserID = tokens[3];
             newUserPassword = tokens[7];
 
             //sets the textboxs equal to the appropriate strings
@@ -261,7 +269,8 @@ public class UserAccountScreen extends ActionBarActivity {
                     Log.e(e.getClass().getName(), e.getMessage(), e);
                 }
             }
-
+            if(dialog.isShowing())
+                dialog.dismiss();
 
 
         }
@@ -277,6 +286,8 @@ public class UserAccountScreen extends ActionBarActivity {
             WhatWeAreDoing = whatWeAreDoing;
             Local = localString;
             Term = termString;
+            dialog = new ProgressDialog(UserAccountScreen.this);
+            dialog.show();
             super.onPreExecute();
         }
 

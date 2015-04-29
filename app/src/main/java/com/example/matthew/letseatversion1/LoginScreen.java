@@ -37,7 +37,10 @@ public class LoginScreen extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Let's Eat");
+        //getActionBar().setTitle("Let's eat");
         setContentView(R.layout.activity_login_screen);
+
     }
 
 

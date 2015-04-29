@@ -2,6 +2,7 @@ package com.example.matthew.letseatversion1;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -46,6 +47,7 @@ public class eventinbox extends ActionBarActivity
     int winner;
     String finaladdress;
     String finalDecision;
+    ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,15 +81,24 @@ public class eventinbox extends ActionBarActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        /*int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }
+        }*/
+        Intent intent = new Intent(eventinbox.this, UserAccountScreen.class);
+        intent.putExtra("serverResponse", serverResponse);
+        startActivity(intent);
 
-        return super.onOptionsItemSelected(item);
+        //return false;
+        super.onOptionsItemSelected(item);
+        finish();
+        return true;
+        //return super.onOptionsItemSelected(item);
         //CreateEvent.php
+        //Toast.makeText(eventinbox.this, "BITCH", Toast.LENGTH_LONG).show();
+
     }
 
 
@@ -137,7 +148,7 @@ public class eventinbox extends ActionBarActivity
             ListView listView = (ListView) findViewById(R.id.list);
             String[] locations = {result, "amp", "le"};
             ArrayAdapter<String> listadapter;
-            if(list != null)
+            if(list != null && list.length > 0)
                 listadapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.listentry, list);
             else
                 listadapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.listentry, locations);
@@ -248,10 +259,17 @@ public class eventinbox extends ActionBarActivity
 
 
 
-            if(list.length == 0)
+            if(listadapter.getCount() == 0)
             {
                 TextView empty = (TextView) findViewById(R.id.empty);
                 empty.setVisibility(View.VISIBLE);
+                empty.invalidate();
+                listView.setVisibility(View.INVISIBLE);
+                listView.invalidate();
+            }
+            if(dialog.isShowing())
+            {
+                dialog.dismiss();
             }
                 //important^^
 
@@ -277,7 +295,8 @@ public class eventinbox extends ActionBarActivity
 
             //username = newUserID;
             Username = username;
-
+            dialog = new ProgressDialog(eventinbox.this);
+            dialog.show();
 
             super.onPreExecute();
         }

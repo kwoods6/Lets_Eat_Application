@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -107,12 +108,16 @@ public class EventScreen extends ActionBarActivity {
                         if(!value.equals(""))
                             buddies.add(value.toString());
                         String output = "";
+                        String formatted = "";
                         for(int i = 0; i<buddies.size(); i++)
                         {
                             output += buddies.get(i) + ";";
+                            formatted+= buddies.get(i) + "\n";
                         }
                         output = output.substring(0,output.length() - 1);
                         Friends = output;
+                        TextView text = (TextView) findViewById(R.id.txtInvitees);
+                        text.setText("Invitees:\n" + formatted);
                         //Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
                         buddies.clear();
                     }
