@@ -52,14 +52,14 @@ public class RestaurantScreen extends ActionBarActivity {
         inviter = getIntent().getExtras().getString("inviter");
         serverResponse = getIntent().getExtras().getString("serverResponse");
         location = getIntent().getExtras().getString("location");
-        for(int i = 0; i<9-preferences.length();i++)
+        for(int i = 0; i<8-preferences.length();i++)
         {
             preferences = "0" + preferences;
         }
         //char largest = preferences.charAt(0);
         int positionOfLargest = 0;
 
-        for(int i = 0; i < 8; i++){
+        for(int i = 0; i < preferences.length(); i++){
             if(preferences.charAt(positionOfLargest) < preferences.charAt(i)){
                 positionOfLargest = i;
             }

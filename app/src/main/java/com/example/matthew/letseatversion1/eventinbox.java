@@ -148,119 +148,114 @@ public class eventinbox extends ActionBarActivity
             ListView listView = (ListView) findViewById(R.id.list);
             String[] locations = {result, "amp", "le"};
             ArrayAdapter<String> listadapter;
-            if(list != null && list.length > 0)
+            if(list != null && list.length > 0) {
                 listadapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.listentry, list);
-            else
-                listadapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.listentry, locations);
-            listView.setAdapter(listadapter);
 
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        final int position, long id) {
+                //else
+                //   listadapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.listentry, locations);
+                listView.setAdapter(listadapter);
 
-                   try
-                   {
-                       JSONObject obj = arr.getJSONObject(position);
-                       inviter = obj.getString("inviter");
-                       if (obj.getString("status").equalsIgnoreCase("started")) {
-                           AlertDialog.Builder builder = new AlertDialog.Builder(eventinbox.this);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> parent, View view,
+                                            final int position, long id) {
 
-                           builder.setTitle("Would you like to accept or decline?");
-                           JSONArray invitees = obj.getJSONArray("invitees");
-                           String inviteeString = "Members:\n";
-                           for(int i = 0; i < invitees.length() / 3; i++)
-                               inviteeString += "Name: " + invitees.getString(i * 3) + " " + invitees.getString((i*3) + 1) + "\n" + "Hometown: " + invitees.getString((i * 3) + 2) + "\n\n";
+                        try {
+                            JSONObject obj = arr.getJSONObject(position);
+                            inviter = obj.getString("inviter");
+                            if (obj.getString("status").equalsIgnoreCase("started")) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(eventinbox.this);
 
-                           builder.setMessage(inviteeString);
-                           // Set up the input
+                                builder.setTitle("Would you like to accept or decline?");
+                                JSONArray invitees = obj.getJSONArray("invitees");
+                                String inviteeString = "Members:\n";
+                                for (int i = 0; i < invitees.length() / 3; i++)
+                                    inviteeString += "Name: " + invitees.getString(i * 3) + " " + invitees.getString((i * 3) + 1) + "\n" + "Hometown: " + invitees.getString((i * 3) + 2) + "\n\n";
 
-                           // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                                builder.setMessage(inviteeString);
+                                // Set up the input
 
-                           builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
-                               @Override
-                               public void onClick(DialogInterface dialog, int which) {
-                                   Intent intent = new Intent(getBaseContext(), SelectPreferencesScreen.class);
-                                   intent.putExtra("serverResponse", serverResponse);
-                                   try {
-                                       intent.putExtra("passingInviter", arr.getJSONObject(position).getString("inviter"));
-                                   } catch (Exception e) {
-                                       e.printStackTrace();
-                                   }
-                                   startActivity(intent);
+                                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
 
-                               }
-                           });
+                                builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(getBaseContext(), SelectPreferencesScreen.class);
+                                        intent.putExtra("serverResponse", serverResponse);
+                                        try {
+                                            intent.putExtra("passingInviter", arr.getJSONObject(position).getString("inviter"));
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        startActivity(intent);
 
-                           builder.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
-                               @Override
-                               public void onClick(DialogInterface dialog, int which) {
-                                   try {
-                                       inviter = arr.getJSONObject(position).getString("inviter");
-                                   } catch (Exception e) {
-                                       e.printStackTrace();
-                                   }
-                                   new declineInvite().execute("http://www.csce.uark.edu/~mrs018/SendInPreferences.php");
-                               }
-                           });
-                           builder.show();
-                       }
-                       else if(obj.getString("status").equalsIgnoreCase("pending"))
-                       {
-                           Intent intent = new Intent(eventinbox.this, RestaurantScreen.class);
-                           intent.putExtra("serverResponse", serverResponse);
-                           intent.putExtra("inviter", inviter);
-                           intent.putExtra("username", username);
-                           intent.putExtra("preferences", obj.getString("totalpreferences"));
-                           intent.putExtra("location", obj.getString("location"));
-                           startActivity(intent);
-                       }
-                       else if(obj.getString("status").equalsIgnoreCase("completed"))
-                       {
-                           String prefs = obj.getString("totalpreferences");
-                           int maxpref = 0;
-                           winner = 0;
-                           String votes = obj.getString("suggestions");
-                           for(int i = 0; i < 5 - votes.length();i++)
-                               votes = "0" + votes;
-                           for(int i = 0; i < 9 - prefs.length();i++)
-                               prefs = 0 + prefs;
-                           for(int i = 1; i<prefs.length();i++)
-                           {
-                               if(prefs.charAt(i) > prefs.charAt(maxpref))
-                               {
-                                   maxpref = i;
-                               }
+                                    }
+                                });
 
-                           }
-                           for(int i = 1; i < votes.length();i++)
-                           {
-                               if(votes.charAt(i) > votes.charAt(winner))
-                               {
-                                   winner = i;
-                               }
-                           }
-                           String[] categories = getResources().getStringArray(R.array.restaurantTypes);
-                           String category = categories[maxpref];
-                           String[] parameters = {"http://uaf59309.ddns.uark.edu/yelprequest.php", category, obj.getString("location")};
-                           new HttpRequestRest().execute(parameters);
+                                builder.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        try {
+                                            inviter = arr.getJSONObject(position).getString("inviter");
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        new declineInvite().execute("http://www.csce.uark.edu/~mrs018/SendInPreferences.php");
+                                    }
+                                });
+                                builder.show();
+                            } else if (obj.getString("status").equalsIgnoreCase("pending")) {
+                                Intent intent = new Intent(eventinbox.this, RestaurantScreen.class);
+                                intent.putExtra("serverResponse", serverResponse);
+                                intent.putExtra("inviter", inviter);
+                                intent.putExtra("username", username);
+                                intent.putExtra("preferences", obj.getString("totalpreferences"));
+                                intent.putExtra("location", obj.getString("location"));
+                                startActivity(intent);
+                            } else if (obj.getString("status").equalsIgnoreCase("completed")) {
+                                String prefs = obj.getString("totalpreferences");
+                                int maxpref = 0;
+                                winner = 0;
+                                String votes = obj.getString("suggestions");
+                                for (int i = 0; i < 5 - votes.length(); i++)
+                                    votes = "0" + votes;
+                                for (int i = 0; i < 9 - prefs.length(); i++)
+                                    prefs = 0 + prefs;
+                                for (int i = 1; i < prefs.length(); i++) {
+                                    if (prefs.charAt(i) > prefs.charAt(maxpref)) {
+                                        maxpref = i;
+                                    }
+
+                                }
+                                for (int i = 1; i < votes.length(); i++) {
+                                    if (votes.charAt(i) > votes.charAt(winner)) {
+                                        winner = i;
+                                    }
+                                }
+                                String[] categories = getResources().getStringArray(R.array.restaurantTypes);
+                                String category = categories[maxpref];
+                                String[] parameters = {"http://uaf59309.ddns.uark.edu/yelprequest.php", category, obj.getString("location")};
+                                new HttpRequestRest().execute(parameters);
 
 
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                listView.setClickable(true);
+                listView.invalidate();
 
 
-                       }
-                       }catch(Exception e){
-                           e.printStackTrace();
-                       }
+                if (listadapter.getCount() == 0) {
+                    TextView empty = (TextView) findViewById(R.id.empty);
+                    empty.setVisibility(View.VISIBLE);
+                    empty.invalidate();
+                    listView.setVisibility(View.INVISIBLE);
+                    listView.invalidate();
                 }
-            });
-            listView.setClickable(true);
-            listView.invalidate();
-
-
-
-
-            if(listadapter.getCount() == 0)
-            {
+            }
+            if (list == null || list.length < 1) {
                 TextView empty = (TextView) findViewById(R.id.empty);
                 empty.setVisibility(View.VISIBLE);
                 empty.invalidate();
